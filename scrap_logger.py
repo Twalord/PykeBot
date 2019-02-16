@@ -3,7 +3,6 @@ import logging
 import logging.config
 import time
 from os import listdir
-from datetime import datetime
 
 
 def setup_logger(console_level=logging.DEBUG, log_file_level=logging.DEBUG, logs_to_keep=20):
