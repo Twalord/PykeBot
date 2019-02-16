@@ -13,6 +13,9 @@ def setup_logger(console_level=logging.DEBUG, log_file_level=logging.DEBUG, logs
 
     # create file handler
     path_to_logs = pathlib.Path.cwd() / "logs"
+    # check if logs folder exists and create it if needed
+    if not (path_to_logs.exists() and path_to_logs.is_dir()):
+        path_to_logs.mkdir()
     # if more then 20 files are in the
     if len(listdir(path_to_logs)) > logs_to_keep:
         for i in range(0, 5):
