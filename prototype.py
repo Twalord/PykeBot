@@ -19,7 +19,6 @@ driver.get(battlefy_url)
 while True:
     try:
         load_more_button = driver.find_element_by_xpath("//*[@id=\"ng-app\"]/body/bf-app/main/div/div/bf-browse/div/bf-tournament-card-list/div[2]/button")
-        #time.sleep(2)
         load_more_button.click()
         time.sleep(2)
 

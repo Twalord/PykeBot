@@ -2,7 +2,7 @@
 
 This bot collects information about upcoming League of Legends tournaments from the websites battlefy, ESL and challangermode.
 
-At the moment only a prototype for battly is available
+At the moment only a prototype for battelfy is available
 
 ## Installation
 
