@@ -9,7 +9,10 @@ def load_config(file='config.ini', delete_config=False):
     abs_file = pathlib.Path.cwd() / file
     if delete_config:
         logging.warning("Deleting config file")
-        pathlib.Path.unlink(abs_file)
+
+        #fixed the bug when trying to delete file without existing file
+        if abs_file in pathlib.Path.cwd().iterdir():
+            pathlib.Path.unlink(abs_file)
     if abs_file not in pathlib.Path.cwd().iterdir():
         logger = logging.getLogger('scrap_logger')
         logger.warning("Config file " + file + " not found!")
