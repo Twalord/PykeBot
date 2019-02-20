@@ -6,27 +6,25 @@ import time
 from models import BattlefyTournament
 import pytz
 import datetime
-import scrap_config
-from ast import literal_eval
+import scrap_config as config
 
 logger = logging.getLogger('scrap_logger')
-config = scrap_config.load_config()
 
 
 def scrape():
     # returns a list of BattlefyTournament objects based on the information scraped from the battlefy site
-    logger.debug("Selected Websites: " + str(literal_eval(config["GENERAL"]["WEBSITES"])))
-    if "BATTLEFY" not in literal_eval(config["GENERAL"]["WEBSITES"]):
+    logger.debug("Selected Websites: " + str(config.get_websites()))
+    if "BATTLEFY" not in config.get_websites():
         logger.warning("Battlefy scraper is disabled.")
         return
 
-    regions = literal_eval(config["GENERAL"]["REGIONS"])
+    regions = config.get_regions()
     if len(regions) == 0:
         logger.warning("No region selected.")
     battlefy_tournaments = []
     for region in regions:
         logger.debug("using " + region + "_URL")
-        url = config["BATTLEFY"][str(region + "_URL")]
+        url = config.get_battlefy_url(region)
         driver = open_session(url)
 
         select_time_frame(driver)
@@ -37,6 +35,13 @@ def scrape():
         driver.quit()
 
         battlefy_tournaments += extract_container(tournament_container, region)
+
+        # probably not a good solution for a filter implementation good enough for testing
+        # TODO improve the solution
+        """
+        battlefy_tournaments = filter_aram(battlefy_tournaments)
+        battlefy_tournaments = filter_1v1(battlefy_tournaments)
+        """
 
     return battlefy_tournaments
 
@@ -54,7 +59,7 @@ def open_session(url):
 def select_time_frame(driver):
     # Battlefy offers TODAY, THIS WEEK and THIS WEEKEND as preset filters
     # selects the filter in the webdriver based on the selection in the configs
-    time_frame = config["BATTLEFY"]["TIME_FRAME"]
+    time_frame = config.get_battlefy_time_frame()
     logger.debug("Selected time_frame: " + time_frame)
     if time_frame == "THIS_WEEK":
         button = driver.find_element_by_xpath("/html/body/bf-app/main/div/div/bf-browse/div/bf-tournament-filters/div/bf-tournament-time-filters/bf-tab-bar/div/div[2]")
@@ -182,7 +187,7 @@ def time_converter(date, time):
     datetime_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
     datetime_obj = datetime_obj.replace(tzinfo=pytz.timezone(timezone))
     # convert to timezone given in config
-    localized_datetime_obj = datetime_obj.astimezone(pytz.timezone(config["GENERAL"]["TIMEZONE"]))
+    localized_datetime_obj = datetime_obj.astimezone(pytz.timezone(config.get_timezone()))
     return localized_datetime_obj
 
 
@@ -219,3 +224,36 @@ def find_year(month):
     else:
         year = current_datetime.year
     return year
+
+
+def filter_aram(battlefy_tournaments, return_aram=False):
+    # battlefy_tournaments must be a list of BattlefyTournament objects
+    # returns a list without or only with aram tournaments
+    logger.debug(str(len(battlefy_tournaments)) + " tournaments submitted to aram filter")
+    aram_tournaments = []
+
+    # TODO fix the filter, not all aram tournaments are filtered out
+    for tournament in battlefy_tournaments:
+        name = tournament.name
+        # check if ARAM or Aram is in the name
+        if "ARAM" in name or "Aram" in name:
+            battlefy_tournaments.remove(tournament)
+            aram_tournaments.append(tournament)
+    logger.debug("Filtered out " + str(len(aram_tournaments)) + " ARAM tournaments")
+    if return_aram:
+        return aram_tournaments
+    return battlefy_tournaments
+
+
+def filter_1v1(battlefy_tournaments, return_1v1=False):
+    # battlefy_tournaments must be a list of BattlefyTournament objects
+    # returns a list withour or only with 1v1 tournaments
+    tournament_1v1 = []
+    for tournament in battlefy_tournaments:
+        if "1v1" in tournament.ttype or "1v1" in tournament.name:
+            battlefy_tournaments.remove(tournament)
+            tournament_1v1.append(tournament)
+    logger.debug("Filtered out " + str(len(tournament_1v1)) + " 1v1 tournaments")
+    if return_1v1:
+        return tournament_1v1
+    return battlefy_tournaments
