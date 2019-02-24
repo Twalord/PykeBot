@@ -7,7 +7,6 @@ logger.debug("Start of program")
 
 # config needs to be loaded before other modules are imported or their load config is executed first
 from battlefy_scraper import scrape as battlefy_scrape
-from ast import literal_eval
 
 # test config
 # logger.debug(config.blank_getter("GENERAL", "REGIONS"))

@@ -11,6 +11,7 @@ import scrap_config as config
 logger = logging.getLogger('scrap_logger')
 
 
+# TODO add tournament host
 def scrape():
     # returns a list of BattlefyTournament objects based on the information scraped from the battlefy site
     logger.debug("Selected Websites: " + str(config.get_websites()))
@@ -35,13 +36,6 @@ def scrape():
         driver.quit()
 
         battlefy_tournaments += extract_container(tournament_container, region)
-
-        # probably not a good solution for a filter implementation good enough for testing
-        # TODO improve the solution
-        """
-        battlefy_tournaments = filter_aram(battlefy_tournaments)
-        battlefy_tournaments = filter_1v1(battlefy_tournaments)
-        """
 
     return battlefy_tournaments
 
@@ -225,35 +219,3 @@ def find_year(month):
         year = current_datetime.year
     return year
 
-
-def filter_aram(battlefy_tournaments, return_aram=False):
-    # battlefy_tournaments must be a list of BattlefyTournament objects
-    # returns a list without or only with aram tournaments
-    logger.debug(str(len(battlefy_tournaments)) + " tournaments submitted to aram filter")
-    aram_tournaments = []
-
-    # TODO fix the filter, not all aram tournaments are filtered out
-    for tournament in battlefy_tournaments:
-        name = tournament.name
-        # check if ARAM or Aram is in the name
-        if "ARAM" in name or "Aram" in name:
-            battlefy_tournaments.remove(tournament)
-            aram_tournaments.append(tournament)
-    logger.debug("Filtered out " + str(len(aram_tournaments)) + " ARAM tournaments")
-    if return_aram:
-        return aram_tournaments
-    return battlefy_tournaments
-
-
-def filter_1v1(battlefy_tournaments, return_1v1=False):
-    # battlefy_tournaments must be a list of BattlefyTournament objects
-    # returns a list withour or only with 1v1 tournaments
-    tournament_1v1 = []
-    for tournament in battlefy_tournaments:
-        if "1v1" in tournament.ttype or "1v1" in tournament.name:
-            battlefy_tournaments.remove(tournament)
-            tournament_1v1.append(tournament)
-    logger.debug("Filtered out " + str(len(tournament_1v1)) + " 1v1 tournaments")
-    if return_1v1:
-        return tournament_1v1
-    return battlefy_tournaments
