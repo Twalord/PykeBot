@@ -3,7 +3,7 @@ import logging
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, ElementNotInteractableException
 import time
-from models import BattlefyTournament
+from models import BattlefyTournament, BattlefyTournamentList
 import pytz
 import datetime
 import scrap_config as config
@@ -37,7 +37,9 @@ def scrape():
 
         battlefy_tournaments += extract_container(tournament_container, region)
 
-    return battlefy_tournaments
+        battlefy_tournaments_list = BattlefyTournamentList(battlefy_tournaments)
+
+    return battlefy_tournaments_list
 
 
 def open_session(url):
@@ -130,7 +132,7 @@ def extract_container(tournament_container, region):
         ttype = tds[3].text
 
         date_time = time_converter(date, time)
-        battlefy_tournament = BattlefyTournament(name, date_time, region, ttype)
+        battlefy_tournament = BattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype)
         battlefy_tournament_list.append(battlefy_tournament)
 
     logger.debug("A total of " + str(len(tournament_container)) + " tournaments were found.")

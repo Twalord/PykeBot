@@ -9,12 +9,14 @@ logger.debug("Start of program")
 from battlefy_scraper import scrape as battlefy_scrape
 
 # test config
-# logger.debug(config.blank_getter("GENERAL", "REGIONS"))
-# logger.debug(config.blank_getter("GENERAL", "sdfsdfREGIONS"))
+config.set_regions(["EUW"])
+config.set_battlefy_time_frame("TODAY")
+config.set_battlefy_url("https://battlefy.com/browse/league-of-legends?region=EU%20West&type=Any%20Format", "EUW")
+config.set_timezone("Etc/GMT+1")
+config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
 
 # test battlefy scrape
 battlefy_tournaments = battlefy_scrape()
-logger.debug("listing " + str(len(battlefy_tournaments)) + " tournaments")
-for tournament in battlefy_tournaments:
-    print(str(tournament))
-    print("\n")
+filtered_tournaments = battlefy_tournaments.filter_format(form="5v5")
+logger.debug("listing " + str(len(filtered_tournaments)) + " tournaments")
+print(str(filtered_tournaments))
