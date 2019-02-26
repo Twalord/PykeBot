@@ -12,9 +12,12 @@ def load_config(file='config.ini', delete_config=False):
     # check if config file exists
     abs_file = pathlib.Path.cwd() / file
     if delete_config:
-        logger.warning("Deleting config file")
+        logger.warning("Deleting config file.")
         if abs_file in pathlib.Path.cwd().iterdir():
             pathlib.Path.unlink(abs_file)
+            logger.info("Deleted config file.")
+        else:
+            logger.warning("Failed to delete config file.")
     if abs_file not in pathlib.Path.cwd().iterdir():
         logger.warning("Config file " + file + " not found!")
         template = pathlib.Path.cwd() / pathlib.Path('template_' + file)

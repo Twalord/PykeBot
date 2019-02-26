@@ -42,7 +42,7 @@ class BattlefyTournament(Tournament):
         d["minutes"], d["seconds"] = divmod(rem, 60)
         fmt = "{days} days {hours}:{minutes}:{seconds}"
         return self.format + " | starts in: " + fmt.format(**d) + " | " + self.date_time.strftime(
-            "%m-%d %H:%M:%S") + " | " + self.name
+            "%m-%d %H:%M:%S") + " | " + self.name + " | "+ self.host
 
     def __post_init__(self):
         super().__post_init__()

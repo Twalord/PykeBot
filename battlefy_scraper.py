@@ -32,7 +32,7 @@ def scrape():
         load_more(driver)
 
         battlefy_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
-        tournament_container = battlefy_soup.find_all('div', class_="card-details")
+        tournament_container = battlefy_soup.find_all('div', class_="card-container")
         driver.quit()
 
         battlefy_tournaments += extract_container(tournament_container, region)
@@ -132,7 +132,10 @@ def extract_container(tournament_container, region):
         ttype = tds[3].text
 
         date_time = time_converter(date, time)
-        battlefy_tournament = BattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype)
+
+        host = tournament.find('span', class_="text-16px ellipsis font-400 text-white ml-10 org-name").text
+
+        battlefy_tournament = BattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype, host=host)
         battlefy_tournament_list.append(battlefy_tournament)
 
     logger.debug("A total of " + str(len(tournament_container)) + " tournaments were found.")
@@ -184,6 +187,7 @@ def time_converter(date, time):
     datetime_obj = datetime_obj.replace(tzinfo=pytz.timezone(timezone))
     # convert to timezone given in config
     localized_datetime_obj = datetime_obj.astimezone(pytz.timezone(config.get_timezone()))
+
     return localized_datetime_obj
 
 
