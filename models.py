@@ -3,8 +3,9 @@ from datetime import datetime, timedelta
 from typing import List
 import pytz
 import scrap_config as config
+import logging
 
-
+logger = logging.getLogger('scrap_logger')
 # for the models dataclasses are used, this feature has been implemented in python 3.7
 
 
@@ -64,6 +65,17 @@ class BattlefyTournament(Tournament):
 
 
 @dataclass
+class DeepBattlefyTournament(BattlefyTournament):
+    # saves additional information like the link
+    link: str = ""
+    # teams_count: int = -1
+    # players_count: int = -1
+
+    def __str__(self):
+        return super().__str__() + " | " + self.link
+
+
+@dataclass
 class BattlefyTournamentList:
     tournaments: List[BattlefyTournament]
     time_stamp: datetime = datetime.now().replace(tzinfo=pytz.timezone(config.get_timezone()))
@@ -90,6 +102,19 @@ class BattlefyTournamentList:
             if t.format == form:
                 filtered_tournaments.append(t)
         return BattlefyTournamentList(tournaments=filtered_tournaments, time_stamp=self.time_stamp)
+
+    def append_tournament(self, new_tournament):
+        if isinstance(new_tournament, BattlefyTournament):
+            self.tournaments.append(new_tournament)
+            return self.tournaments
+        else:
+            logger.debug("Can't append object to BattlefyTournamentList as it is no BattlefyTournament object")
+            logger.debug(str(new_tournament))
+
+    def append_tournaments(self, new_tournaments):
+        for new_tournament in new_tournaments:
+            self.append_tournament(new_tournament)
+        return self.tournaments
 
     def __len__(self):
         return len(self.tournaments)

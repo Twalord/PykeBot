@@ -16,7 +16,7 @@ config.set_timezone("CET")
 config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
 
 # test battlefy scrape
-battlefy_tournaments = battlefy_scrape()
+battlefy_tournaments = battlefy_scrape(scrape_deep=True)
 filtered_tournaments = battlefy_tournaments.filter_format(form="ARAM")
 logger.debug("listing " + str(len(filtered_tournaments)) + " tournaments")
 print(str(filtered_tournaments))

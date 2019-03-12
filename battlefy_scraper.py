@@ -2,8 +2,9 @@ import bs4
 import logging
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, ElementNotInteractableException
+from selenium.webdriver.common.keys import Keys
 import time
-from models import BattlefyTournament, BattlefyTournamentList
+from models import BattlefyTournament, BattlefyTournamentList, DeepBattlefyTournament
 import pytz
 import datetime
 import scrap_config as config
@@ -11,19 +12,24 @@ import scrap_config as config
 logger = logging.getLogger('scrap_logger')
 
 
-# TODO add tournament host
-def scrape():
-    # returns a list of BattlefyTournament objects based on the information scraped from the battlefy site
+def scrape(scrape_deep=False):
+    # returns a BattlefyTournament list object based on the information scraped from the battlefy site
+    # deep search returns additional information like the link to the tournament but takes longer
     logger.debug("Selected Websites: " + str(config.get_websites()))
+
+    battlefy_tournaments_list = BattlefyTournamentList([])
+
     if "BATTLEFY" not in config.get_websites():
         logger.warning("Battlefy scraper is disabled.")
-        return
+        return battlefy_tournaments_list
 
     regions = config.get_regions()
     if len(regions) == 0:
         logger.warning("No region selected.")
-    battlefy_tournaments = []
+        return battlefy_tournaments_list
+
     for region in regions:
+        battlefy_tournaments = []
         logger.debug("using " + region + "_URL")
         url = config.get_battlefy_url(region)
         driver = open_session(url)
@@ -33,11 +39,24 @@ def scrape():
 
         battlefy_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
         tournament_container = battlefy_soup.find_all('div', class_="card-container")
-        driver.quit()
+        if not scrape_deep:
+            driver.quit()
 
-        battlefy_tournaments += extract_container(tournament_container, region)
+            battlefy_tournaments += extract_container(tournament_container, region)
 
-        battlefy_tournaments_list = BattlefyTournamentList(battlefy_tournaments)
+            battlefy_tournaments_list.append_tournaments(battlefy_tournaments)
+
+        else:
+            logger.debug("Starting deep search")
+            battlefy_tournaments += extract_container(tournament_container, region, scrape_deep=True)
+
+            for battlefy_tournament in battlefy_tournaments:
+                link = find_link(battlefy_tournament.name, battlefy_tournament.host, driver)
+                battlefy_tournament.link = link
+
+            driver.quit()
+
+            battlefy_tournaments_list.append_tournaments(battlefy_tournaments)
 
     return battlefy_tournaments_list
 
@@ -103,7 +122,7 @@ def load_more(driver):
             continue
 
 
-def extract_container(tournament_container, region):
+def extract_container(tournament_container, region, scrape_deep=False):
     # returns a list of BattlefyTournament objects created from the collected information
     battlefy_tournament_list = []
     # Selects name, date, time and type for each tournament
@@ -135,7 +154,12 @@ def extract_container(tournament_container, region):
 
         host = tournament.find('span', class_="text-16px ellipsis font-400 text-white ml-10 org-name").text
 
-        battlefy_tournament = BattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype, host=host)
+        if not scrape_deep:
+            battlefy_tournament = BattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype,
+                                                     host=host)
+        else:
+            battlefy_tournament = DeepBattlefyTournament(name=name, date_time=date_time, region=region, ttype=ttype,
+                                                         host=host)
         battlefy_tournament_list.append(battlefy_tournament)
 
     logger.debug("A total of " + str(len(tournament_container)) + " tournaments were found.")
@@ -225,3 +249,25 @@ def find_year(month):
         year = current_datetime.year
     return year
 
+
+def find_link(name, host, driver):
+    # uses the name and host of a tournament to search for it on its host_page
+    # returns a DeepBattlefyTournament with the link
+    base_url = "https://battlefy.com/"
+    host_url = host.replace(" ", "-").lower()
+    host_page = base_url + host_url
+    driver.get(host_page)
+
+    search_box = driver.find_element_by_xpath("//*[@id=\"org-hub\"]/div[2]/ui-view/bf-organization-tournaments/bf-org-tournament-list/div/div[1]/div/div[1]/bf-search-input/div/input")
+    search_box.send_keys(name)
+    search_box.send_keys(Keys.ENTER)
+    time.sleep(1)
+    link = extract_link(driver)
+    return link
+
+
+def extract_link(driver):
+    # returns the full link to the tournament
+    table = driver.find_element_by_css_selector('table')
+    link = table.find_element_by_css_selector('a').get_attribute('href')
+    return link
