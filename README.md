@@ -18,3 +18,8 @@ Firefox needs to be installed in order for this to work.
 
 At the moment executing prototype.py returns information on all upcoming projects for the next week.
 During the collection a firefox web browser is opened, do not click on anything in this window.
+
+
+## TODO
+
+- Update the README.md

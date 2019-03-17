@@ -1,3 +1,10 @@
+"""
+Main module for the League_Tournament_Scraper.
+
+Only used for testing for now.
+:author: Jonathan Decker
+"""
+
 import scrap_logger
 import scrap_config as config
 

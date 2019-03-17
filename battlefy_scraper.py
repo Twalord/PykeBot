@@ -1,3 +1,9 @@
+"""
+Handles scraping for the battlefy web page.
+scrape() is the main function of this module.
+:author: Jonathan Decker
+"""
+
 import bs4
 import logging
 from selenium import webdriver
@@ -9,10 +15,18 @@ import pytz
 import datetime
 import scrap_config as config
 
+
 logger = logging.getLogger('scrap_logger')
 
 
 def scrape(scrape_deep=False):
+    """
+    Starts a web session using selenium and the settings given in config to gather information on Battlefy Tournaments
+    :param scrape_deep: Boolean, True to use DeepBattlefyTournament instead of BattlefyTournament, also additional
+    information is scraped. Takes longer.
+    :return: BattlefyTournamentList containing BattlefyTournament objects representing the scraped tournaments
+    """
+
     # returns a BattlefyTournament list object based on the information scraped from the battlefy site
     # deep search returns additional information like the link to the tournament but takes longer
     logger.debug("Selected Websites: " + str(config.get_websites()))
@@ -62,6 +76,12 @@ def scrape(scrape_deep=False):
 
 
 def open_session(url):
+    """
+    Open a selenium web session in Firefox for the given url
+    :param url: String, a valid web url
+    :return: webdriver, with an open session for the given url
+    """
+
     # opens a web session and returns the webdriver
     driver = webdriver.Firefox()
     driver.implicitly_wait(30)
@@ -72,6 +92,13 @@ def open_session(url):
 
 
 def select_time_frame(driver):
+    """
+    Selects the time frame defined in the config on the battlefy page.
+    Webdriver must be on the battlefy tournament list page.
+    :param driver: Webdriver, on the battlefy tournament list page
+    :return: None, but in the Webdriver the time frame button was pressed
+    """
+
     # Battlefy offers TODAY, THIS WEEK and THIS WEEKEND as preset filters
     # selects the filter in the webdriver based on the selection in the configs
     time_frame = config.get_battlefy_time_frame()
@@ -94,6 +121,12 @@ def select_time_frame(driver):
 
 
 def handle_iframe_popup(driver):
+    """
+    Closes the iframe popup that sometimes appears on the battlefy page while loading data.
+    :param driver: Webdriver, with an open iframe popup
+    :return: None, but the iframe popup in the Webdriver has been closed
+    """
+
     # sometimes after a while an iframe popup appears which needs to be closed in order to continue
     logger.debug("Trying to handle iframe popup.")
     driver.switch_to.frame("intercom-modal-frame")
@@ -104,6 +137,13 @@ def handle_iframe_popup(driver):
 
 
 def load_more(driver):
+    """
+    Presses the *Load More* Button on the Battlefy tournament list page which needs to be open in the Webdriver.
+    It does so until it can't find a *Load More*.
+    :param driver: Webdriver, with an open Battlefy tournament list page.
+    :return: None, but the *Load More* Button in the Webdriver has been pressed
+    """
+
     # presses load more button until all tournaments for the time_frame are loaded
     while True:
         try:
@@ -123,6 +163,15 @@ def load_more(driver):
 
 
 def extract_container(tournament_container, region, scrape_deep=False):
+    """
+    Extracts tournament details for each tournament in tournament_container
+    :param tournament_container: List[BeautifulSoup], containing the "card container" html blocks
+    :param region: String, used to set the region when creating a BattlefyTournament object
+    :param scrape_deep: Boolean, if True uses DeepBattlefyTournament instead of BattlefyTournament
+    :return: List[BattlefyTournament], the BattlefyTournament objects were created from the information extracted from
+    html blocks
+    """
+
     # returns a list of BattlefyTournament objects created from the collected information
     battlefy_tournament_list = []
     # Selects name, date, time and type for each tournament
@@ -168,6 +217,13 @@ def extract_container(tournament_container, region, scrape_deep=False):
 
 
 def time_converter(date, time):
+    """
+    Converts the time strings given in the battlefy html page to datetime objects and localizes the time zone
+    :param date: String, example format: *Sun, Feb 17th*
+    :param time: String, example format: *2:00 PM GMT*
+    :return: datetime, constructed from the given strings and localized to the time zone set in config
+    """
+
     # date has form: Sun, Feb 17th
     # time has form: 2:00 PM GMT
     date_list = date.split()
@@ -216,6 +272,12 @@ def time_converter(date, time):
 
 
 def convert_month(month):
+    """
+    Converts a 3 char String representing a month into its number
+    :param month: String, needs to be 3 chars, example: *Mar*
+    :return: int, the number of the month given
+    """
+
     # converts month 3 character abbreviation to int
     month_lookup = {
         "Jan": 1,
@@ -238,6 +300,13 @@ def convert_month(month):
 
 
 def find_year(month):
+    """
+    Returns the year the tournament takes place, assuming that the tournament must take place the same year as the
+    information was scraped or in the next year.
+    :param month: int, from 1-12 representing a month
+    :return: int, the year the tournament takes place
+    """
+
     # returns the year of the tournaments as int
     # this assumes if the number of the current month is higher than the number of the tournament,
     # the tournament must take place next year
@@ -251,6 +320,14 @@ def find_year(month):
 
 
 def find_link(name, host, driver):
+    """
+    Uses the filter function on the battlefy host page to find the tournament and extract its direct link.
+    :param name: String, the full name of the tournament
+    :param host: String, name of the host on battlefy
+    :param driver: Webdriver, the current window will be overwritten to open the battlefy host page
+    :return: String, full web link to the tournament on battlefy
+    """
+
     # uses the name and host of a tournament to search for it on its host_page
     # returns a DeepBattlefyTournament with the link
     base_url = "https://battlefy.com/"
@@ -267,6 +344,12 @@ def find_link(name, host, driver):
 
 
 def extract_link(driver):
+    """
+    Extracts the link from the html page.
+    :param driver: Webdriver, with open host page and filter with the tournament name entered
+    :return: String, full web link to the tournament on battlefy
+    """
+
     # returns the full link to the tournament
     table = driver.find_element_by_css_selector('table')
     link = table.find_element_by_css_selector('a').get_attribute('href')

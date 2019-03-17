@@ -1,10 +1,8 @@
-import logging
-import functools
-import time
-
-logger = logging.getLogger('scrap_logger')
-
 """
+Offers a few functions that could help while debugging.
+
+:author: Jonathan Decker
+
 This decorators can be used to debug functions.
 In order to use them import this module and add @functionname
 on top of the function def you wish to debug.
@@ -16,9 +14,20 @@ def do_something(value):
     return
 
 """
+import logging
+import functools
+import time
+
+logger = logging.getLogger('scrap_logger')
 
 
 def timer(func):
+    """
+    Wrapper that records the execution time and logs it.
+    :param func: function
+    :return: wrapper_timer
+    """
+
     # log the runtime of the decorated function
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
@@ -32,6 +41,12 @@ def timer(func):
 
 
 def debug(func):
+    """
+    Wrapper that logs the called function, the given arguments and the returned value.
+    :param func: function
+    :return: wrapper_debug
+    """
+
     # log the function signature and return value
     @functools.wraps(func)
     def wrapper_debug(*args, **kwargs):

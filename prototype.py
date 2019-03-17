@@ -1,3 +1,10 @@
+"""
+Prototype for the battlefy web scraper.
+Can perform simple searches on the battlefy website to demonstrate the process.
+
+:author: Jonathan Decker
+"""
+
 import bs4
 import logging
 from selenium import webdriver

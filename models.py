@@ -1,3 +1,9 @@
+"""
+Provides classes for the project.
+
+:author: Jonathan Decker
+"""
+
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import List
@@ -11,6 +17,10 @@ logger = logging.getLogger('scrap_logger')
 
 @dataclass
 class Tournament:
+    """
+    Base-class for all tournaments
+    """
+
     name: str
     date_time: datetime
     region: str
@@ -31,6 +41,10 @@ class Tournament:
 
 @dataclass
 class BattlefyTournament(Tournament):
+    """
+    Saves and handles Battlefy tournaments.
+    """
+
     # add Battlefy specific stuff
     host: str = "unknown"
     # possible formats are 'ARAM', '5v5', '1v1', '3v3', 'other', 'unset'
@@ -43,7 +57,7 @@ class BattlefyTournament(Tournament):
         d["minutes"], d["seconds"] = divmod(rem, 60)
         fmt = "{days} days {hours}:{minutes}:{seconds}"
         return self.format + " | starts in: " + fmt.format(**d) + " | " + self.date_time.strftime(
-            "%m-%d %H:%M:%S") + " | " + self.name + " | "+ self.host
+            "%m-%d %H:%M:%S") + " | " + self.name + " | " + self.host
 
     def __post_init__(self):
         super().__post_init__()
@@ -66,6 +80,10 @@ class BattlefyTournament(Tournament):
 
 @dataclass
 class DeepBattlefyTournament(BattlefyTournament):
+    """
+    Saves additional Battlefy information acquired by a deeper search.
+    """
+
     # saves additional information like the link
     link: str = ""
     # teams_count: int = -1
@@ -77,6 +95,10 @@ class DeepBattlefyTournament(BattlefyTournament):
 
 @dataclass
 class BattlefyTournamentList:
+    """
+    Saves a list of BattlefyTournament objects and allows filtering.
+    """
+
     tournaments: List[BattlefyTournament]
     time_stamp: datetime = datetime.now().replace(tzinfo=pytz.timezone(config.get_timezone()))
 
@@ -87,15 +109,36 @@ class BattlefyTournamentList:
         return output
 
     def get_tournament(self):
+        """
+        Returns the last tournament in the list.
+        :return: BattlefyTournament
+        """
+
         return self.tournaments[-1]
 
     def pop_tournament(self):
+        """
+        Returns the last tournament in the list and removes it.
+        :return: BattlefyTournament
+        """
+
         return self.tournaments.pop()
 
     def get_tournament_list(self):
+        """
+        Returns the list of BattlefyTournaments
+        :return: List[BattlefyTournament]
+        """
+
         return self.tournaments
 
     def filter_format(self, form):
+        """
+        Returns a BattlefyTournamentList object only containing the given format
+        :param form: String, a valid format, valid formats are: "1v1", "3v3", "5v5", "ARAM", "other"
+        :return: BattlefyTournamentList
+        """
+
         # returns a filtered BattlefyTournamentList without modifying the original object
         filtered_tournaments = []
         for t in self.tournaments:
@@ -104,17 +147,27 @@ class BattlefyTournamentList:
         return BattlefyTournamentList(tournaments=filtered_tournaments, time_stamp=self.time_stamp)
 
     def append_tournament(self, new_tournament):
+        """
+        Adds the given tournament to the list.
+        :param new_tournament: BattlefyTournament, or any inheriting class
+        :return: None, but the list was modified
+        """
+
         if isinstance(new_tournament, BattlefyTournament):
             self.tournaments.append(new_tournament)
-            return self.tournaments
         else:
             logger.debug("Can't append object to BattlefyTournamentList as it is no BattlefyTournament object")
             logger.debug(str(new_tournament))
 
     def append_tournaments(self, new_tournaments):
+        """
+        Adds the given tournaments to the list.
+        :param new_tournaments: List[BattlefyTournament]
+        :return: None, but the list was modified
+        """
+
         for new_tournament in new_tournaments:
             self.append_tournament(new_tournament)
-        return self.tournaments
 
     def __len__(self):
         return len(self.tournaments)
@@ -122,11 +175,19 @@ class BattlefyTournamentList:
 
 @dataclass
 class ESLTournament(Tournament):
+    """
+    Saves and handles ESL tournaments.
+    """
+
     # add ESL specific stuff
     website: str = 'ESL'
 
 
 @dataclass
 class ChallengermodeTournament(Tournament):
+    """
+    Saves and handles Challengermode tournaments.
+    """
+
     # add Challengermode specific stuff
     website: str = 'Challengermode'

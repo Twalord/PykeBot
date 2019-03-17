@@ -1,3 +1,9 @@
+"""
+Handles the configuration of the 'scrap_logger'. Should be called at the start of execution.
+Can be used by importing logging and calling logging.getLogger('scrap_logger')
+:author: Jonathan Decker
+"""
+
 import pathlib
 import logging
 import logging.config
@@ -6,6 +12,14 @@ from os import listdir
 
 
 def setup_logger(console_level=logging.DEBUG, log_file_level=logging.DEBUG, logs_to_keep=20):
+    """
+    Sets up the logger, console and log file logging level can be set independently. Oldest logs will be deleted first.
+    :param console_level: logging level, valid levels are CRITICAL, ERROR, WARNING, INFO, DEBUG
+    :param log_file_level: logging level, valid levels are CRITICAL, ERROR, WARNING, INFO, DEBUG
+    :param logs_to_keep: int, number of log files to keep before deleting the oldest
+    :return: logger, can also be used via logging.getLogger('scrap_logger')
+    """
+
     # create logger with 'scrap_logger'
     scrap_logger = logging.getLogger('scrap_logger')
     scrap_logger.setLevel(logging.DEBUG)
@@ -43,6 +57,12 @@ def setup_logger(console_level=logging.DEBUG, log_file_level=logging.DEBUG, logs
 
 
 def delete_oldest_log(path_to_logs):
+    """
+    Determines the oldest log file and deletes it.
+    :param path_to_logs: String, abs file path to the log file folder
+    :return: None, but the oldest log file has been deleted
+    """
+
     if len(listdir(path_to_logs)) == 0:
         return
     time, file_path = min((f.stat().st_mtime, f) for f in path_to_logs.iterdir())
