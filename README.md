@@ -26,5 +26,7 @@ Running main.py will result in a test output. The main loop still needs to be im
 - implement scraping for challengermode
 - implement main loop
 - implement Discord API interface
+- implement scraping for toornament
+- implement SINN League stalker
 
 - extend scraping
