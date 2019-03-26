@@ -10,6 +10,7 @@ and providing filter to make sure only relevant information are displayed.
 The bot requires beautifulsoup4, selenium, pytz and the geckodriver.
 
 Beatifulsoup4, pytz and selenium can be installed via pip.
+Simply run pip install -r requirements.txt in the project folder.
 
 The geckodriver can be found here https://github.com/mozilla/geckodriver/releases
 for windows user simply place the geckodriver.exe in the same folder as this project.
