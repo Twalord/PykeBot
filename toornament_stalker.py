@@ -1,3 +1,7 @@
+"""
+Handles scraping of the toornament page.
+:author: Jonathan Decker
+"""
 import scrap_config as config
 import logging
 from selenium import webdriver
@@ -8,11 +12,11 @@ import time
 logger = logging.getLogger('scrap_logger')
 
 
-def stalk_toornament(toornament_link):
+def stalk(toornament_link):
     """
     Stalks all teams signed up for the given toornament and returns an op.gg multi link for each team
     :param toornament_link: String, url to a tournament on toornament
-    :return: List[String], containing the op.gg multi links for each team
+    :return: List[(String, String)], containing a tuple with the team name and the op.gg multi links for each team
     """
 
     # open the websession
@@ -36,7 +40,7 @@ def stalk_toornament(toornament_link):
         participants_links.append(base_url + a['href'])
 
     # open each link, switch to information and collect the Summoner Names
-    multi_links = []
+    multi_links_tuple = []
     for link in participants_links:
         driver.get(link)
         time.sleep(0.5)
@@ -44,6 +48,7 @@ def stalk_toornament(toornament_link):
         information_button.click()
         time.sleep(0.5)
         toornament_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+        team_name = driver.find_element_by_xpath("//*[@id=\"main-container\"]/div[1]/div/div[2]/div/div[2]/div/span").text
         name_container = toornament_soup.find_all('div', class_="text secondary small summoner_player_id")
         names = []
         for container in name_container:
@@ -52,10 +57,10 @@ def stalk_toornament(toornament_link):
             name = name.replace("\n", "")
             name = name.strip()
             names.append(name)
-        multi_links.append(build_opgg_multi_link(names))
+        multi_links_tuple.append((team_name, build_opgg_multi_link(names)))
 
     driver.quit()
-    return multi_links
+    return multi_links_tuple
 
 
 def build_opgg_multi_link(sum_names):

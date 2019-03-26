@@ -19,11 +19,12 @@ import scrap_config as config
 logger = logging.getLogger('scrap_logger')
 
 
-def scrape(scrape_deep=False):
+def scrape(time_frame, scrape_deep=False):
     """
     Starts a web session using selenium and the settings given in config to gather information on Battlefy Tournaments
     :param scrape_deep: Boolean, True to use DeepBattlefyTournament instead of BattlefyTournament, also additional
     information is scraped. Takes longer.
+    :param time_frame: String, used to call a specific time_frame without changing the settings
     :return: BattlefyTournamentList containing BattlefyTournament objects representing the scraped tournaments
     """
 
@@ -48,7 +49,7 @@ def scrape(scrape_deep=False):
         url = config.get_battlefy_url(region)
         driver = open_session(url)
 
-        select_time_frame(driver)
+        select_time_frame(driver, time_frame)
         load_more(driver)
 
         battlefy_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
@@ -91,7 +92,7 @@ def open_session(url):
     return driver
 
 
-def select_time_frame(driver):
+def select_time_frame(driver, time_frame):
     """
     Selects the time frame defined in the config on the battlefy page.
     Webdriver must be on the battlefy tournament list page.
@@ -101,7 +102,6 @@ def select_time_frame(driver):
 
     # Battlefy offers TODAY, THIS WEEK and THIS WEEKEND as preset filters
     # selects the filter in the webdriver based on the selection in the configs
-    time_frame = config.get_battlefy_time_frame()
     logger.debug("Selected time_frame: " + time_frame)
     if time_frame == "THIS_WEEK":
         button = driver.find_element_by_xpath("/html/body/bf-app/main/div/div/bf-browse/div/bf-tournament-filters/div/bf-tournament-time-filters/bf-tab-bar/div/div[2]")
@@ -224,6 +224,7 @@ def time_converter(date, time):
     :return: datetime, constructed from the given strings and localized to the time zone set in config
     """
 
+    hour24 = False
     # date has form: Sun, Feb 17th
     # time has form: 2:00 PM GMT
     date_list = date.split()
@@ -240,7 +241,7 @@ def time_converter(date, time):
         # 24 is not accepted so needs to be changed to 0 and day + 1
         if hours == 24:
             hours = 0
-            day = str(int(day) + 1)
+            hour24 = True
         # for the datetime conversion hours must be 2 digits
         if len(str(hours)) == 1:
             time24 = "0" + str(hours) + ":" + time24_list[1]
@@ -264,6 +265,8 @@ def time_converter(date, time):
     # convert to datetime obj
     date_str = str(year) + "-" + month + "-" + day + " " + time24
     datetime_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+    if hour24:
+        datetime_obj = datetime_obj + datetime.timedelta(days=1)
     datetime_obj = datetime_obj.replace(tzinfo=pytz.timezone(timezone))
     # convert to timezone given in config
     localized_datetime_obj = datetime_obj.astimezone(pytz.timezone(config.get_timezone()))

@@ -14,7 +14,7 @@ logger.debug("Start of program")
 
 # config needs to be loaded before other modules are imported or their load config is executed first
 from battlefy_scraper import scrape as battlefy_scrape
-from toornament_stalker import stalk_toornament
+from toornament_stalker import stalk as stalk_toornament
 from discord_interface import run_bot
 
 # test config

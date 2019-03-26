@@ -132,6 +132,19 @@ class BattlefyTournamentList:
 
         return self.tournaments
 
+    @staticmethod
+    def filter_viable(test_filter):
+        """
+        Tests if the filter is viable
+        :param test_filter: String, must be "1v1", "3v3", "5v5", "ARAM", "other" to be viable
+        :return: Boolean, True if the filter is viable
+        """
+        viable_filter = ["1v1", "3v3", "5v5", "ARAM", "other"]
+        if test_filter in viable_filter:
+            return True
+        else:
+            return False
+
     def filter_format(self, form):
         """
         Returns a BattlefyTournamentList object only containing the given format
