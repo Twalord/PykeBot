@@ -1,5 +1,5 @@
 """
-Provides commands for the Discord Bot API.
+Provides commands for the Discord Bot API. 🦆
 :author: Jonathan Decker
 """
 import scrap_config as config
