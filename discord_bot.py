@@ -2,12 +2,10 @@
 Provides commands for the Discord Bot API. 🦆
 :author: Jonathan Decker
 """
-import scrap_config as config
+from utils import scrap_config as config
 import logging
 from discord.ext import commands
-from discord import Game
-from battlefy_scraper import scrape as scrape_battlefy
-from toornament_stalker import stalk as stalk_toornament, build_opgg_multi_link
+from battlefy.battlefy_scraper import scrape as scrape_battlefy
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 

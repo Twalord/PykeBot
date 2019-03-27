@@ -5,16 +5,13 @@ Only used for testing for now.
 :author: Jonathan Decker
 """
 
-import scrap_logger
-import scrap_config as config
+from utils import scrap_config as config, scrap_logger
 
 # setup logger
 logger = scrap_logger.setup_logger()
 logger.debug("Start of program")
 
 # config needs to be loaded before other modules are imported or their load config is executed first
-from battlefy_scraper import scrape as battlefy_scrape
-from toornament_stalker import stalk as stalk_toornament
 from discord_bot import run_bot
 
 # test config

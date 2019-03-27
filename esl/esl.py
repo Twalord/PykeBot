@@ -1,8 +1,5 @@
-import bs4
-import scrap_logger
 import logging
 import requests
-from models import ESLTournament
 
 
 def scrape(configs, morestuff):

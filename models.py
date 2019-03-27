@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import List
 import pytz
-import scrap_config as config
+from utils import scrap_config as config
 import logging
 
 logger = logging.getLogger('scrap_logger')

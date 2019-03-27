@@ -6,15 +6,14 @@ scrape() is the main function of this module.
 
 import bs4
 import logging
-from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, ElementNotInteractableException
 from selenium.webdriver.common.keys import Keys
 import time
 from models import BattlefyTournament, BattlefyTournamentList, DeepBattlefyTournament
 import pytz
 import datetime
-import scrap_config as config
-
+from utils import scrap_config as config
+from webmanager import open_session, quit_session
 
 logger = logging.getLogger('scrap_logger')
 
@@ -47,7 +46,8 @@ def scrape(time_frame, scrape_deep=False):
         battlefy_tournaments = []
         logger.debug("using " + region + "_URL")
         url = config.get_battlefy_url(region)
-        driver = open_session(url)
+        driver = open_session()
+        driver.get(url)
 
         select_time_frame(driver, time_frame)
         load_more(driver)
@@ -55,7 +55,7 @@ def scrape(time_frame, scrape_deep=False):
         battlefy_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
         tournament_container = battlefy_soup.find_all('div', class_="card-container")
         if not scrape_deep:
-            driver.quit()
+            quit_session(driver)
 
             battlefy_tournaments += extract_container(tournament_container, region)
 
@@ -69,27 +69,11 @@ def scrape(time_frame, scrape_deep=False):
                 link = find_link(battlefy_tournament.name, battlefy_tournament.host, driver)
                 battlefy_tournament.link = link
 
-            driver.quit()
+            quit_session(driver)
 
             battlefy_tournaments_list.append_tournaments(battlefy_tournaments)
 
     return battlefy_tournaments_list
-
-
-def open_session(url):
-    """
-    Open a selenium web session in Firefox for the given url
-    :param url: String, a valid web url
-    :return: webdriver, with an open session for the given url
-    """
-
-    # opens a web session and returns the webdriver
-    driver = webdriver.Firefox()
-    driver.implicitly_wait(30)
-    logger.debug("Opening " + url + " in selenium firefox session")
-    driver.get(url)
-
-    return driver
 
 
 def select_time_frame(driver, time_frame):

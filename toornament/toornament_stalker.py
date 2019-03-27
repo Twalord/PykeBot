@@ -2,11 +2,10 @@
 Handles scraping of the toornament page.
 :author: Jonathan Decker
 """
-import scrap_config as config
 import logging
-from selenium import webdriver
 import bs4
 import time
+from webmanager import open_session, quit_session
 
 
 logger = logging.getLogger('scrap_logger')
@@ -20,8 +19,7 @@ def stalk(toornament_link):
     """
 
     # open the websession
-    driver = webdriver.Firefox()
-    driver.implicitly_wait(30)
+    driver = open_session()
     driver.get(toornament_link)
 
     # find the participants button and press it
@@ -59,7 +57,7 @@ def stalk(toornament_link):
             names.append(name)
         multi_links_tuple.append((team_name, build_opgg_multi_link(names)))
 
-    driver.quit()
+    quit_session(driver)
     return multi_links_tuple
 
 
