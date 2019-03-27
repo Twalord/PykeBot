@@ -10,6 +10,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 """
+Requirements were updated, this fix should not be necessary anymore.
 discord.py does not work with Python 3.7 to fix this:
 in lib\site-packages\discord\compat.py line 32
 needs to be changed to create_task = getattr(asyncio, 'async')
@@ -77,13 +78,14 @@ async def on_ready():
 @bot.command(name='ping',
              description="test command response",
              brief="Pong!",
-             aliases=["Ping"])
-async def ping():
+             aliases=["Ping"],
+             pass_context=True)
+async def ping(ctx):
     """
     Ping test
     :return: None
     """
-    await bot.say('Pong!')
+    await ctx.send('Pong!')
 
 
 @bot.group(name='scrape',
@@ -93,7 +95,7 @@ async def ping():
            pass_context=True)
 async def base_scrape(ctx):
     if ctx.invoked_subcommand is None:
-        await bot.say("Select a website to scrape by calling !scrape <Website>"
+        await ctx.send("Select a website to scrape by calling !scrape <Website>"
                       " (<Timeframe> <Filter>) for example !scrape Battlefy TODAY ARAM")
 
 # TODO manage 0 tournaments found or left after filter case
@@ -107,7 +109,7 @@ async def base_scrape(ctx):
                    pass_context=True)
 async def battlefy(ctx):
     if ctx.invoked_subcommand is battlefy:
-        await bot.say("Starting Battlefy surface scraping based on settings \n"
+        await ctx.send("Starting Battlefy surface scraping based on settings \n"
                       "Timeframe: " + config.get_battlefy_time_frame() + "\n"
                                                                          "Filter: None")
 
@@ -125,17 +127,17 @@ async def battlefy(ctx):
 async def battlefy_today(ctx, *args):
     if ctx.invoked_subcommand is battlefy_today:
         if len(args) > 0:
-            await bot.say("Starting Battlefy surface scraping for time frame TODAY and " + args[0] + " as filter")
+            await ctx.send("Starting Battlefy surface scraping for time frame TODAY and " + args[0] + " as filter")
         else:
-            await bot.say("Starting Battlefy surface scraping for time frame TODAY and no filter")
+            await ctx.send("Starting Battlefy surface scraping for time frame TODAY and no filter")
 
         def sub_proc():
             return scrape_battlefy(time_frame="TODAY")
 
         if len(args) > 0:
-            await run_battlefy_scraper(sub_proc, args[0])
+            await run_battlefy_scraper(ctx, sub_proc, args[0])
         else:
-            await run_battlefy_scraper(sub_proc)
+            await run_battlefy_scraper(ctx, sub_proc)
 
 
 @base_scrape.group(name='battlefy_deep',
@@ -146,28 +148,28 @@ async def battlefy_today(ctx, *args):
                    pass_context=True)
 async def battlefy_deep(ctx):
     if ctx.invoked_subcommand is battlefy_deep:
-        await bot.say("Starting Battlefy deep scraping based on settings \n"
+        await ctx.send("Starting Battlefy deep scraping based on settings \n"
                       "Timeframe: " + config.get_battlefy_time_frame() + "\n"
                                                                          "Filter: None")
 
         def sub_proc():
             return scrape_battlefy(time_frame=config.get_battlefy_time_frame(), scrape_deep=True)
 
-        await run_battlefy_scraper(sub_proc)
+        await run_battlefy_scraper(ctx, sub_proc)
 
 
 @battlefy_deep.group()
 async def battlefy_deep_today(ctx, *, arg):
     if ctx.invoked_subcommand is battlefy_deep_today:
-        await bot.say("Starting Battlefy deep scraping for time frame TODAY and no Filter")
+        await ctx.send("Starting Battlefy deep scraping for time frame TODAY and no Filter")
 
         def sub_proc():
             return scrape_battlefy(scrape_deep=True, time_frame="TODAY")
 
-        await run_battlefy_scraper(sub_proc)
+        await run_battlefy_scraper(ctx, sub_proc)
 
 
-async def run_battlefy_scraper(func, filter_=""):
+async def run_battlefy_scraper(ctx, func, filter_=""):
     loop = asyncio.get_event_loop()
     tournaments = await loop.run_in_executor(ThreadPoolExecutor(), func)
     if tournaments.filter_viable(filter_):
@@ -178,7 +180,7 @@ async def run_battlefy_scraper(func, filter_=""):
         out_raw += str(tournament) + "\n"
     out_list = chunk_message(out_raw)
     for out in out_list:
-        await bot.say(out)
+        await ctx.send(out)
 
 
 # ----------------------------------------------
@@ -192,7 +194,7 @@ async def run_battlefy_scraper(func, filter_=""):
            pass_context=True)
 async def call_battlefy_scraper(ctx):
     if ctx.invoked_subcommand is None:
-        await bot.say("Starting scrape with base settings")
+        await ctx.send("Starting scrape with base settings")
         loop = asyncio.get_event_loop()
 
         def sub_proc():
@@ -204,12 +206,12 @@ async def call_battlefy_scraper(ctx):
             out_raw += str(tournament) + "\n"
         out_list = chunk_message(out_raw)
         for out in out_list:
-            await bot.say(out)
+            await ctx.send(out)
 
 
 @call_battlefy_scraper.command()
 async def deep():
-    await bot.say("Starting deep scrape with base settings")
+    await ctx.send("Starting deep scrape with base settings")
     loop = asyncio.get_event_loop()
 
     def sub_deep():
@@ -221,13 +223,13 @@ async def deep():
         out_raw += str(tournament) + "\n"
     out_list = chunk_message(out_raw)
     for out in out_list:
-        await bot.say(out)
+        await ctx.send(out)
 
 
 @bot.command()
 async def call_stalk_toornament(arg):
     logger.debug("Toornament stalker called by user")
-    await bot.say("Starting toornament stalker")
+    await ctx.send("Starting toornament stalker")
 
     def sub_stalk_toornament():
         return stalk_toornament(arg)
@@ -238,11 +240,11 @@ async def call_stalk_toornament(arg):
         out_raw += link[0] + " " + link[1] + "\n"
     out_list = chunk_message(out_raw)
     for out in out_list:
-        await bot.say(out)
+        await ctx.send(out)
 
 
 
 @bot.command()
 async def build_multi_link(ctx, *args):
-    await bot.say(build_opgg_multi_link(args))
+    await ctx.send(build_opgg_multi_link(args))
 """
