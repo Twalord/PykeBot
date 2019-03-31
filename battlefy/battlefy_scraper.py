@@ -9,7 +9,7 @@ import logging
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, ElementNotInteractableException
 from selenium.webdriver.common.keys import Keys
 import time
-from models import BattlefyTournament, BattlefyTournamentList, DeepBattlefyTournament
+from models import BattlefyTournament, TournamentList, DeepBattlefyTournament
 import pytz
 import datetime
 from utils import scrap_config as config
@@ -31,7 +31,7 @@ def scrape(time_frame, scrape_deep=False):
     # deep search returns additional information like the link to the tournament but takes longer
     logger.debug("Selected Websites: " + str(config.get_websites()))
 
-    battlefy_tournaments_list = BattlefyTournamentList([])
+    battlefy_tournaments_list = TournamentList([])
 
     if "BATTLEFY" not in config.get_websites():
         logger.warning("Battlefy scraper is disabled.")
