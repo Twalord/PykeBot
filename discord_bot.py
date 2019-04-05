@@ -95,13 +95,19 @@ async def ping(ctx):
 @bot.command(name='scrape',
              pass_context=True)
 async def scrape(ctx, *args):
+    """
+    Initialises a scrape for tournament information based on the given args
+    :param ctx: Context
+    :param args: tuple(str), the args are checked for validity based on the lookups in taskmaster
+    :return: None, but the results of the scrape are send to the context
+    """
     logger.debug("received user command scrape " + str(args))
     # prepare asyncio loop to avoid timeout
     loop = asyncio.get_event_loop()
     arg_list = list(args)
 
     def sub_proc():
-        return call_taskmaster(ctx, arg_list, True)
+        return call_taskmaster(arg_list, True)
 
     # call taskmaster with args and is_scrape = True
     out_raw = await loop.run_in_executor(ThreadPoolExecutor(), sub_proc)
@@ -113,4 +119,9 @@ async def scrape(ctx, *args):
 
 
 async def update_client_presence(status: str):
+    """
+    Updates the bots presence to the given status, always with playing at front
+    :param status: str, any valid string
+    :return: None, but the bots presence was changed
+    """
     await bot.change_presence(activity=Game(name=status))

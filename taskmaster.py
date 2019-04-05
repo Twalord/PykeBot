@@ -1,6 +1,11 @@
+"""
+Handles calls from the discord_bot.
+This module takes calls with arguments, finds the correct functions
+and starts them via a multithreaded worker pool.
+:author: Jonathan Decker
+"""
 from dataclasses import dataclass
 from typing import List
-from discord.ext.commands.context import Context
 import logging
 import concurrent.futures
 from battlefy.battlefy_scraper import scrape as battlefy_scrape, scrape_deep as battlefy_scrape_deep
@@ -96,7 +101,6 @@ class SingleTask:
 @dataclass
 class TaskGroup:
     tasks: List[SingleTask]
-    context: Context
     task_count: int = 0
 
     def __post_init__(self):
@@ -110,9 +114,16 @@ class UnknownArgumentError(Exception):
     pass
 
 
-def call_taskmaster(ctx: Context, args: List[str], is_scrape: bool):
+def call_taskmaster(args: List[str], is_scrape: bool):
+    """
+    Main function of this module, takes a list of arguments and returns the scraped TournamentList
+    :param args: List[str], the args must be valid according to the lookups in this module
+    :param is_scrape: bool, tells if this was called as part of a scrape or stalk command
+    :return: TournamentList, containing all tournaments returned for the given command
+    """
+
     # call interpret_args to find the fitting tasks
-    calls, filters, time_frame = interpret_args(ctx, args, is_scrape)
+    calls, filters, time_frame = interpret_args(args, is_scrape)
     logger.debug(
         "Interpreted args as calls: " + str(calls) + "\nand filters: " + str(filters) + "\nand time_frame: " + str(
             time_frame))
@@ -131,7 +142,7 @@ def call_taskmaster(ctx: Context, args: List[str], is_scrape: bool):
         tasks.append(task)
 
     # create TaskGroup
-    task_group = TaskGroup(tasks, ctx)
+    task_group = TaskGroup(tasks)
 
     # submit TaskGroup to multiprocessing
     logger.debug("Submitting TaskGroup with " + str(task_group.task_count) + " tasks")
@@ -148,6 +159,12 @@ def call_taskmaster(ctx: Context, args: List[str], is_scrape: bool):
 
 
 def aliases_lookup(arg: str, is_scrape: bool):
+    """
+    Takes an alias and returns the full argument
+    :param arg: str, a valid alias for the real argument
+    :param is_scrape: bool, tells if this was called as part of a scrape or stalk command
+    :return: str, the real arg name
+    """
     # turn arg to lowercase and merge lookup dict
     lower_arg = arg.lower()
     if is_scrape:
@@ -168,6 +185,11 @@ def aliases_lookup(arg: str, is_scrape: bool):
 
 
 def split_calls_time_frame_filter(args: List[str]):
+    """
+    Splits a given list of arguments in calls, filters and time_frames
+    :param args: List[str], all str must be valid real args, no aliases
+    :return: (List[str], List[str], List[str]), a tuple containing calls, filters, time_frames
+    """
     # split args into calls, filter and time_frame, also filters out unknown args
     calls = []
     filter_ = []
@@ -184,7 +206,13 @@ def split_calls_time_frame_filter(args: List[str]):
     return calls, filter_, time_frame
 
 
-def interpret_args(ctx: Context, args: List[str], is_scrape: bool):
+def interpret_args(args: List[str], is_scrape: bool):
+    """
+    Takes a list of args and returns a tuple without aliases split into calls, filters, time_frames
+    :param args: List[str], containing any valid args
+    :param is_scrape: bool, tells if this is part of scrape or stalk command
+    :return: (List[str], List[str], List[str]), tuple containing calls, filters, time_frames
+    """
     # use lookup table to understand aliases
     no_aliases = []
     for arg in args:
@@ -202,6 +230,11 @@ def interpret_args(ctx: Context, args: List[str], is_scrape: bool):
 
 
 def execute_task(st: SingleTask):
+    """
+    Finds the correct function to call based on the argument and executes it.
+    :param st: SingleTask, a valid SingleTask object
+    :return: TournamentList, forwarded from the called function
+    """
     # use lookup to find scraper responsible for task
     st.status = "WORKING"
     if st.is_scrape:
@@ -217,6 +250,11 @@ def execute_task(st: SingleTask):
 
 
 def submit_task_group(tg: TaskGroup):
+    """
+    Submits all tasks in the given TaskGroup to a ThreadPoolExecutor and returns the merged results
+    :param tg: Taskgroup, a valid Taskgroup
+    :return: TournamentList, merged from the TournamentList objects returned by the tasks in the TaskGroup
+    """
     results = []
     # setup ThreadPoolExecutor with worker pool and execute_task, also update the presence of the bot
     with concurrent.futures.ThreadPoolExecutor() as executor:
