@@ -13,6 +13,8 @@ logger.debug("Start of program")
 
 # config needs to be loaded before other modules are imported or their load config is executed first
 from discord_bot import run_bot
+# from battlefy.battlefy_scraper import scrape
+# from toornament.toornament_stalker import stalk
 
 # test config
 
@@ -25,7 +27,7 @@ config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
 
 # test battlefy scrape
 """
-battlefy_tournaments = battlefy_scrape(scrape_deep=True)
+battlefy_tournaments = scrape(scrape_deep=True)
 filtered_tournaments = battlefy_tournaments.filter_format(form="ARAM")
 logger.debug("listing " + str(len(filtered_tournaments)) + " tournaments")
 print(str(filtered_tournaments))
@@ -33,10 +35,9 @@ print(str(filtered_tournaments))
 
 # test toornament_stalker
 """
-multi_links = stalk_toornament("https://www.toornament.com/tournaments/2260729467409637376/information")
+multi_links = stalk("https://www.toornament.com/tournaments/2260729467409637376/information")
 for link in multi_links:
     print(link)
 """
-
 # test discord_interface
 run_bot()

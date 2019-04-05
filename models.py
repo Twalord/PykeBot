@@ -10,6 +10,7 @@ from typing import List
 import pytz
 from utils import scrap_config as config
 import logging
+from itertools import combinations
 
 logger = logging.getLogger('scrap_logger')
 # for the models dataclasses are used, this feature has been implemented in python 3.7
@@ -33,6 +34,12 @@ class Tournament:
     def __str__(self):
         return self.name + " " + self.ttype + " " + self.date_time.strftime("%m-%d %H:%M:%S") + " starts in " + str(
             self.starts_in)
+
+    def __eq__(self, other):
+        if isinstance(other, Tournament):
+            if self.name == other.name and self.date_time == other.date_time:
+                return True
+        return False
 
     def __post_init__(self):
         self.starts_in = self.calculate_start_time()
@@ -108,6 +115,9 @@ class TournamentList:
             output += str(t) + "\n"
         return output
 
+    def __len__(self):
+        return len(self.tournaments)
+
     def get_tournament(self):
         """
         Returns the last tournament in the list.
@@ -155,8 +165,15 @@ class TournamentList:
         for new_tournament in new_tournaments:
             self.append_tournament(new_tournament)
 
-    def __len__(self):
-        return len(self.tournaments)
+    def remove_duplicates(self):
+        """
+        Removes all duplicates from the list
+        :return: None, but the list was modified
+        """
+
+        for tournament, other_tournament in combinations(self.tournaments, 2):
+            if tournament.__eq__(other_tournament):
+                self.tournaments.remove(other_tournament)
 
     @staticmethod
     def filter_viable(test_filter):
@@ -184,6 +201,19 @@ class TournamentList:
             if t.format == form:
                 filtered_tournaments.append(t)
         return TournamentList(tournaments=filtered_tournaments, time_stamp=self.time_stamp)
+
+    def merge_tournament_lists(self, other):
+        """
+        Adds anothers given TournamentList objects tournament list to this TournamentList and calls remove_duplicates
+        :param other: TournamentList
+        :return: None, but the tournaments list was modified
+        """
+        if isinstance(other, TournamentList):
+            for tournament in other.tournaments:
+                self.append_tournament(tournament)
+            self.remove_duplicates()
+        else:
+            raise TypeError
 
 
 @dataclass

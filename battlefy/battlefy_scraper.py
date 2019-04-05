@@ -18,13 +18,13 @@ from webmanager import open_session, quit_session
 logger = logging.getLogger('scrap_logger')
 
 
-def scrape(time_frame, scrape_deep=False):
+def scrape(time_frame='TODAY', scrape_deep=False):
     """
     Starts a web session using selenium and the settings given in config to gather information on Battlefy Tournaments
     :param scrape_deep: Boolean, True to use DeepBattlefyTournament instead of BattlefyTournament, also additional
     information is scraped. Takes longer.
     :param time_frame: String, used to call a specific time_frame without changing the settings
-    :return: BattlefyTournamentList containing BattlefyTournament objects representing the scraped tournaments
+    :return: TournamentList containing BattlefyTournament objects representing the scraped tournaments
     """
 
     # returns a BattlefyTournament list object based on the information scraped from the battlefy site
@@ -74,6 +74,15 @@ def scrape(time_frame, scrape_deep=False):
             battlefy_tournaments_list.append_tournaments(battlefy_tournaments)
 
     return battlefy_tournaments_list
+
+
+def scrape_deep(time_frame='TODAY'):
+    """
+    Same as scrape but call scrape_deep set as True
+    :param time_frame: String, used to call a specific time_frame without changing the settings
+    :return: BattlefyTournamentList containing BattlefyTournament objects representing the scraped tournaments
+    """
+    return scrape(time_frame, scrape_deep=True)
 
 
 def select_time_frame(driver, time_frame):
