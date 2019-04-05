@@ -18,15 +18,13 @@ Firefox needs to be installed in order for this to work.
 
 ## Usage
 
-Running main.py will result in a test output. The main loop still needs to be implemented.
+Running main.py will start the Discord Bot which will await commands.
 
 
 ## TODO
 
 - implement scraping for ESL page
 - implement scraping for challengermode
-- implement main loop
-- implement Discord API interface
 - implement scraping for toornament
 - implement SINN League stalker
 
