@@ -29,7 +29,6 @@ def scrape(time_frame='TODAY', scrape_deep=False):
 
     # returns a BattlefyTournament list object based on the information scraped from the battlefy site
     # deep search returns additional information like the link to the tournament but takes longer
-    logger.debug("Selected Websites: " + str(config.get_websites()))
 
     battlefy_tournaments_list = TournamentList([])
 
@@ -44,7 +43,6 @@ def scrape(time_frame='TODAY', scrape_deep=False):
 
     for region in regions:
         battlefy_tournaments = []
-        logger.debug("using " + region + "_URL")
         url = config.get_battlefy_url(region)
         driver = open_session()
         driver.get(url)
@@ -95,7 +93,6 @@ def select_time_frame(driver, time_frame):
 
     # Battlefy offers TODAY, THIS WEEK and THIS WEEKEND as preset filters
     # selects the filter in the webdriver based on the selection in the configs
-    logger.debug("Selected time_frame: " + time_frame)
     if time_frame == "THIS_WEEK":
         button = driver.find_element_by_xpath("/html/body/bf-app/main/div/div/bf-browse/div/bf-tournament-filters/div/bf-tournament-time-filters/bf-tab-bar/div/div[2]")
         button.click()

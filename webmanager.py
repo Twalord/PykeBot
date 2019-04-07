@@ -1,4 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
+options = Options()
+options.add_argument("--headless")
 
 
 def open_session():
@@ -8,7 +12,7 @@ def open_session():
     """
 
     # opens a web session and returns the webdriver
-    driver = webdriver.Firefox()
+    driver = webdriver.Firefox(options=options)
     driver.implicitly_wait(30)
 
     return driver

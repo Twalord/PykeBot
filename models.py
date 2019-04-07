@@ -35,7 +35,7 @@ class Tournament:
         return self.name + " " + self.ttype + " " + self.date_time.strftime("%m-%d %H:%M:%S") + " starts in " + str(
             self.starts_in)
 
-    def __eq__(self, other):
+    def equals(self, other):
         if isinstance(other, Tournament):
             if self.name == other.name and self.date_time == other.date_time:
                 return True
@@ -171,9 +171,11 @@ class TournamentList:
         :return: None, but the list was modified
         """
 
+        before = len(self.tournaments)
         for tournament, other_tournament in combinations(self.tournaments, 2):
-            if tournament.__eq__(other_tournament):
+            if tournament.equals(other_tournament):
                 self.tournaments.remove(other_tournament)
+        logger.debug("Removed " + str(before - len(self.tournaments)) + " duplicates")
 
     @staticmethod
     def filter_viable(test_filter):
@@ -182,6 +184,7 @@ class TournamentList:
         :param test_filter: String, must be "1v1", "3v3", "5v5", "ARAM", "other" to be viable
         :return: Boolean, True if the filter is viable
         """
+
         viable_filter = ["1v1", "3v3", "5v5", "ARAM", "other"]
         if test_filter in viable_filter:
             return True
@@ -204,14 +207,14 @@ class TournamentList:
 
     def merge_tournament_lists(self, other):
         """
-        Adds anothers given TournamentList objects tournament list to this TournamentList and calls remove_duplicates
+        Adds anothers given TournamentList objects tournament list to this TournamentList
         :param other: TournamentList
         :return: None, but the tournaments list was modified
         """
+
         if isinstance(other, TournamentList):
             for tournament in other.tournaments:
                 self.append_tournament(tournament)
-            self.remove_duplicates()
         else:
             raise TypeError
 

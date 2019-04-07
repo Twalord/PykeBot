@@ -39,5 +39,6 @@ multi_links = stalk("https://www.toornament.com/tournaments/2260729467409637376/
 for link in multi_links:
     print(link)
 """
+
 # test discord_interface
 run_bot()
