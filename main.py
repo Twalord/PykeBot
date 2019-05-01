@@ -13,8 +13,9 @@ logger.debug("Start of program")
 
 # config needs to be loaded before other modules are imported or their load config is executed first
 from discord_bot import run_bot
+from challengermode.challengermode_stalker import stalk as stalk_challengermode
 # from battlefy.battlefy_scraper import scrape
-# from toornament.toornament_stalker import stalk
+from toornament.toornament_stalker import stalk
 
 # test config
 
@@ -34,11 +35,15 @@ print(str(filtered_tournaments))
 """
 
 # test toornament_stalker
-"""
-multi_links = stalk("https://www.toornament.com/tournaments/2260729467409637376/information")
+multi_links = stalk("https://www.toornament.com/tournaments/2324026559405285376/information")
 for link in multi_links:
     print(link)
-"""
+
+
+# test challengermode_stalker
+# stalk_challengermode("https://www.challengermode.com/Tournaments/Show/30ddf5f5-5e59-e911-b49d-28187814ffef")
 
 # test discord_interface
+"""
 run_bot()
+"""

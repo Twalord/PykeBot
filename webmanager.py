@@ -5,14 +5,17 @@ options = Options()
 options.add_argument("--headless")
 
 
-def open_session():
+def open_session(headless=True):
     """
     Open a selenium web session in Firefox
     :return: webdriver, with an open session
     """
 
     # opens a web session and returns the webdriver
-    driver = webdriver.Firefox(options=options)
+    if headless:
+        driver = webdriver.Firefox(options=options)
+    else:
+        driver = webdriver.Firefox()
     driver.implicitly_wait(30)
 
     return driver

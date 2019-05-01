@@ -245,3 +245,53 @@ class ToornamentTournament(Tournament):
     Saves and handles Toornament tournaments.
     """
     website: str = 'Toornament'
+
+
+@dataclass
+class Player:
+    summoner_name: str
+    rank: str = ""
+    opgg: str = ""
+
+    def __post_init__(self):
+        region = "euw"
+        base_url = "https://" + region +".op.gg/summoner/userName="
+        self.opgg = base_url + self.summoner_name.replace(" ", "")
+
+
+@dataclass
+class Team:
+    name: str
+    multi_link: str = ""
+    player_list = List[Player]
+
+    def build_opgg_multi_link(self):
+        """
+        construct a valid op.gg multi link for the given summoner names
+        :param sum_names: List[String], a list of Summonernames
+        :return: String, url to the multilink for the given names
+        """
+        region = "euw"  # static for now, should be loaded from config
+        base_url = "https://" + region + ".op.gg/multi/query="
+        multi_link = base_url
+        for player in self.player_list:
+            multi_link += player.replace(" ", "")
+            multi_link += "%2C"
+        return multi_link
+
+    def __post_init__(self):
+        self.multi_link = self.build_opgg_multi_link()
+
+    def __str__(self):
+        return self.name + " | " + self.multi_link
+
+
+@dataclass
+class TeamList:
+    teams: List[Team]
+
+    def __str__(self):
+        out = ""
+        for team in self.teams:
+            out += str(team) + "\n"
+        return out

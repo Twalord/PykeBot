@@ -29,3 +29,5 @@ Running main.py will start the Discord Bot which will await commands.
 - implement SINN League stalker
 
 - extend scraping
+
+- gather usage statistics
