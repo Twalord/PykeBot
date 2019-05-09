@@ -16,15 +16,16 @@ from discord_bot import run_bot
 from challengermode.challengermode_stalker import stalk as stalk_challengermode
 # from battlefy.battlefy_scraper import scrape
 from toornament.toornament_stalker import stalk
+from sinn_league import sinn_league_stalker
 
 # test config
-
+"""
 config.set_regions(["EUW"])
 config.set_battlefy_time_frame("TODAY")
 config.set_battlefy_url("https://battlefy.com/browse/league-of-legends?region=EU%20West&type=Any%20Format", "EUW")
 config.set_timezone("CET")
 config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
-
+"""
 
 # test battlefy scrape
 """
@@ -35,13 +36,22 @@ print(str(filtered_tournaments))
 """
 
 # test toornament_stalker
+"""
 multi_links = stalk("https://www.toornament.com/tournaments/2324026559405285376/information")
 for link in multi_links:
     print(link)
+"""
 
 
 # test challengermode_stalker
 # stalk_challengermode("https://www.challengermode.com/Tournaments/Show/30ddf5f5-5e59-e911-b49d-28187814ffef")
+
+
+# test sinn_league_stalker
+url = "https://www.summoners-inn.de/de/leagues/sinn/986-season-1"
+team_lists = sinn_league_stalker.stalk(url)
+for team_list in team_lists:
+    print(team_list)
 
 # test discord_interface
 """

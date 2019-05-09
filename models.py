@@ -262,8 +262,8 @@ class Player:
 @dataclass
 class Team:
     name: str
+    player_list: List[Player]
     multi_link: str = ""
-    player_list = List[Player]
 
     def build_opgg_multi_link(self):
         """
@@ -275,7 +275,7 @@ class Team:
         base_url = "https://" + region + ".op.gg/multi/query="
         multi_link = base_url
         for player in self.player_list:
-            multi_link += player.replace(" ", "")
+            multi_link += player.summoner_name.replace(" ", "")
             multi_link += "%2C"
         return multi_link
 
@@ -288,10 +288,11 @@ class Team:
 
 @dataclass
 class TeamList:
+    name: str
     teams: List[Team]
 
     def __str__(self):
-        out = ""
+        out = self.name + "\n"
         for team in self.teams:
             out += str(team) + "\n"
         return out

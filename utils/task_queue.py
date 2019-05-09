@@ -9,6 +9,7 @@ SingleTask.
 import concurrent.futures
 from typing import List
 import logging
+import traceback
 
 logger = logging.getLogger('scrap_logger')
 
@@ -26,7 +27,8 @@ class SingleTask:
     def execute(self):
         func = self.func_pos0[0]
         arguments = self.args
-        return func(*arguments)
+        result = func(*arguments)
+        return result
 
 
 class TaskGroup:
@@ -36,15 +38,16 @@ class TaskGroup:
         self.tasks = tasks
 
 
-def submit_task_group(tg: TaskGroup):
+def submit_task_group(tg: TaskGroup, max_workers=20):
     """
     Submits all tasks in the given TaskGroup to a ThreadPoolExecutor and returns the merged results
     :param tg: Taskgroup, a valid Taskgroup
+    :param max_workers: int, set the limit for parallel workers, standard is 20
     :return: TournamentList, merged from the TournamentList objects returned by the tasks in the TaskGroup
     """
     results = []
     # setup ThreadPoolExecutor with worker pool and execute_task, also update the presence of the bot
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_task = {executor.submit(task.execute): task for task in tg.tasks}
         t_count = tg.task_count
         logger.debug(str(t_count) + " tasks have been submitted.")
@@ -55,7 +58,9 @@ def submit_task_group(tg: TaskGroup):
             try:
                 results.append(future.result())
             except Exception as exc:
+                traceback_string = traceback.format_exc()
                 logger.error('%r generated an exception: %s' % (st, exc))
+                logger.debug(traceback_string)
 
     # return results
     return results
