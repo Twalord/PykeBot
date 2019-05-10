@@ -6,6 +6,8 @@ Only used for testing for now.
 """
 
 from utils import scrap_config as config, scrap_logger
+import time
+start_time = time.perf_counter()
 
 # setup logger
 logger = scrap_logger.setup_logger()
@@ -17,6 +19,7 @@ from challengermode.challengermode_stalker import stalk as stalk_challengermode
 # from battlefy.battlefy_scraper import scrape
 from toornament.toornament_stalker import stalk
 from sinn_league import sinn_league_stalker
+from utils import player_lookup
 
 # test config
 """
@@ -48,12 +51,22 @@ for link in multi_links:
 
 
 # test sinn_league_stalker
-url = "https://www.summoners-inn.de/de/leagues/sinn/986-season-1"
+url = "https://www.summoners-inn.de/de/leagues/sinn/1206-season-2"
 team_lists = sinn_league_stalker.stalk(url)
+player_lookup.add_list_team_list_ranks(team_lists)
 for team_list in team_lists:
     print(team_list)
+
+
+# test player_lookup
+#sum_name = "Colors of Darkness"
+#player_lookup.test_stalk_player(sum_name)
 
 # test discord_interface
 """
 run_bot()
 """
+
+end_time = time.perf_counter()
+run_time = round(end_time - start_time, 2)
+logger.info(f"Finished execution in {run_time} secs")

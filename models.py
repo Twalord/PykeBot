@@ -248,15 +248,38 @@ class ToornamentTournament(Tournament):
 
 
 @dataclass
+class Rank:
+    string = ""
+    rating = 0
+
+    def __init__(self, rank_string, rating):
+        self.string = rank_string
+        self.rating = rating
+
+    def __str__(self):
+        return self.string
+
+
+@dataclass
 class Player:
     summoner_name: str
-    rank: str = ""
+    rank: Rank
     opgg: str = ""
+
+    def __init__(self, sum_name, rank=None):
+        self.summoner_name = sum_name
+        self.rank = rank
 
     def __post_init__(self):
         region = "euw"
         base_url = "https://" + region +".op.gg/summoner/userName="
         self.opgg = base_url + self.summoner_name.replace(" ", "")
+
+    def __str__(self):
+        if Rank is None:
+            return self.summoner_name
+        else:
+            return self.summoner_name + " " + str(self.rank)
 
 
 @dataclass
@@ -264,6 +287,8 @@ class Team:
     name: str
     player_list: List[Player]
     multi_link: str = ""
+    average_rank: Rank = None
+    max_rank: Rank = None
 
     def build_opgg_multi_link(self):
         """
@@ -283,7 +308,10 @@ class Team:
         self.multi_link = self.build_opgg_multi_link()
 
     def __str__(self):
-        return self.name + " | " + self.multi_link
+        if self.average_rank is None:
+            return self.name + " | " + self.multi_link
+        else:
+            return self.name + " Ø: " + str(self.average_rank) + " max: " + str(self.max_rank) + " | " + self.multi_link
 
 
 @dataclass

@@ -57,9 +57,11 @@ def stalk(url):
         single_tasks.append(single_task)
     task_group = task_queue.TaskGroup(single_tasks)
 
+    logger.info("Stalking " + str(len(single_tasks)) + " groups in SINN League")
     team_lists = task_queue.submit_task_group(task_group)
 
     # return results
+    logger.info("Finished SINN League stalking")
     return team_lists
 
 
@@ -117,15 +119,18 @@ def stalk_team(url):
     team_name = team_container.find("a").text
 
     # extract player names
-    confirmed = player_container.find_all('span', class_="txt-status-positive")
-    player_infos = player_container.find_all('span', title="League of Legends » LoL Summoner Name (EU West)")
+    player_boxes = player_container.find_all('li')
+    tuple_list = []
+    for box in player_boxes:
+        confirmed = box.find('span', class_="txt-status-positive")
+        player_info = box.find('span', title="League of Legends » LoL Summoner Name (EU West)")
+        tuple_list.append((player_info, confirmed))
 
     # create Team object and filter out unconfirmed player
     player_names = []
     confirmed_check = "Bestätigter Spieler"
-    tuple_list = list(zip(player_infos, confirmed))
     for player, confirm in tuple_list:
-        if confirm.text == confirmed_check:
+        if confirm is not None and confirm.text == confirmed_check:
             player_obj = Player(player.text)
             player_names.append(player_obj)
 
