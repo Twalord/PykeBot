@@ -1,5 +1,5 @@
 """
-Contains lookup tables for command aliases, needs to be updated upon adding new functions
+Contains lookup tables for various modules
 :author: Jonathan Decker
 """
 # define the lookup table, should be updated when adding functions
@@ -7,6 +7,9 @@ from battlefy.battlefy_scraper import scrape as battlefy_scrape, scrape_deep as 
 from esl.esl import scrape as esl_scrape
 from toornament.toornament_stalker import stalk as toornament_stalk
 
+"""
+lookup tables for taskmaster to understand user commands
+"""
 b = "battlefy"
 bd = "battlefy_deep"
 e = "esl"
@@ -70,6 +73,9 @@ scrape_task_lookup = {
 stalk_task_lookup = {
     to: toornament_stalk
 }
+"""
+lookup tables for player_lookup to understand player rankings
+"""
 rank_lookup = {"unranked": 0,
                "iron iv": 1,
                "iron 4": 1,
