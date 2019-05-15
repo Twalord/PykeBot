@@ -1,4 +1,4 @@
-from webmanager import open_session, quit_session
+from utils.webmanager import open_session, quit_session
 import logging
 import time
 import bs4

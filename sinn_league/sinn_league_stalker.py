@@ -3,7 +3,7 @@ Provides functions to collect information on all players in a SINN League Season
 
 :author: Jonathan Decker
 """
-from webmanager import open_session, quit_session
+from utils.webmanager import open_session, quit_session
 import logging
 import time
 import bs4

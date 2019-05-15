@@ -5,7 +5,7 @@ Handles scraping of the toornament page.
 import logging
 import bs4
 import time
-from webmanager import open_session, quit_session
+from utils.webmanager import open_session, quit_session
 from models import Team, TeamList, Player
 import requests
 from utils.task_queue import TaskGroup, SingleTask, submit_task_group

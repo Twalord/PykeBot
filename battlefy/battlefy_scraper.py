@@ -13,7 +13,7 @@ from models import BattlefyTournament, TournamentList, DeepBattlefyTournament
 import pytz
 import datetime
 from utils import scrap_config as config
-from webmanager import open_session, quit_session
+from utils.webmanager import open_session, quit_session
 
 logger = logging.getLogger('scrap_logger')
 
