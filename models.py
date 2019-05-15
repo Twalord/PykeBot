@@ -249,6 +249,9 @@ class ToornamentTournament(Tournament):
 
 @dataclass
 class Rank:
+    """
+    Saves a player rank as string and integer
+    """
     string = ""
     rating = 0
 
@@ -262,6 +265,9 @@ class Rank:
 
 @dataclass
 class Player:
+    """
+    Saves information on a single league account
+    """
     summoner_name: str
     rank: Rank
     opgg: str = ""
@@ -272,7 +278,7 @@ class Player:
 
     def __post_init__(self):
         region = "euw"
-        base_url = "https://" + region +".op.gg/summoner/userName="
+        base_url = "https://" + region + ".op.gg/summoner/userName="
         self.opgg = base_url + self.summoner_name.replace(" ", "")
 
     def __str__(self):
@@ -284,6 +290,9 @@ class Player:
 
 @dataclass
 class Team:
+    """
+    Saves information for a team of league players
+    """
     name: str
     player_list: List[Player]
     multi_link: str = ""
@@ -293,11 +302,10 @@ class Team:
     def build_opgg_multi_link(self):
         """
         construct a valid op.gg multi link for the given summoner names
-        :param sum_names: List[String], a list of Summonernames
         :return: String, url to the multilink for the given names
         """
         region = "euw"  # static for now, should be loaded from config
-        base_url = "https://" + region + ".op.gg/multi/query="
+        base_url = f"https://{region}.op.gg/multi/query="
         multi_link = base_url
         for player in self.player_list:
             multi_link += player.summoner_name.replace(" ", "")
@@ -316,6 +324,9 @@ class Team:
 
 @dataclass
 class TeamList:
+    """
+    Saves a list of teams and the name of the list
+    """
     name: str
     teams: List[Team]
 

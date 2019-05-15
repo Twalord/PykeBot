@@ -51,16 +51,11 @@ for link in multi_links:
 
 
 # test sinn_league_stalker
-url = "https://www.summoners-inn.de/de/leagues/sinn/1206-season-2"
+url = "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3"
 team_lists = sinn_league_stalker.stalk(url)
 player_lookup.add_list_team_list_ranks(team_lists)
 for team_list in team_lists:
     print(team_list)
-
-
-# test player_lookup
-#sum_name = "Colors of Darkness"
-#player_lookup.test_stalk_player(sum_name)
 
 # test discord_interface
 """

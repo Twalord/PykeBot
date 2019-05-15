@@ -1,3 +1,8 @@
+"""
+Provides functions to collect information on all players in a SINN League Season.
+
+:author: Jonathan Decker
+"""
 from webmanager import open_session, quit_session
 import logging
 import time
@@ -11,6 +16,11 @@ logger = logging.getLogger('scrap_logger')
 
 
 def stalk(url):
+    """
+    Main function of the module, takes a url to a SINN League Season and returns a list of TeamList objects
+    :param url: Str, url to the main page of a SINN League Season
+    :return: List[TeamList], a list of TeamList objects with each TeamList representing a group
+    """
     # open web session
     driver = open_session()
 
@@ -66,6 +76,11 @@ def stalk(url):
 
 
 def filter_links(link):
+    """
+    Helper function to filter out non group links
+    :param link: Str, a web link
+    :return: Bool, true if the link contains a keyword and leads to a group, false if not
+    """
     keywords = ["gruppenphase", "group"]
     link_split = link.split("/")
     for split in link_split:
@@ -75,6 +90,11 @@ def filter_links(link):
 
 
 def stalk_group(url):
+    """
+    Returns a TeamList object for all teams in the group behind the given url.
+    :param url: Str, a link to a group in a SINN League
+    :return: TeamList, a TeamList object containing all teams of the group
+    """
     # open web session
     page = requests.get(url)
 
@@ -105,6 +125,11 @@ def stalk_group(url):
 
 
 def stalk_team(url):
+    """
+    Returns a Team object for all players in the team behind the given url
+    :param url: Str, a link to a team on the SINN League page
+    :return: Team, a Team object containing all valid players from the Team
+    """
     # open web session
     page = requests.get(url)
 
