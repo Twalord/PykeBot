@@ -13,14 +13,13 @@ start_time = time.perf_counter()
 logger = scrap_logger.setup_logger()
 logger.debug("Start of program")
 
-run_tests = True
 start_bot = False
 
 tests = {"config": False,
          "battlefy_scrape": False,
-         "toornament_stalker": False,
+         "toornament_stalker": True,
          "challengermode_stalker": False,
-         "sinn_league_stalker": True}
+         "sinn_league_stalker": False}
 
 # test config
 if tests.get("config"):
@@ -43,9 +42,10 @@ if tests.get("battlefy_scrape"):
 # test toornament_stalker
 if tests.get("toornament_stalker"):
     from toornament.toornament_stalker import stalk
-    multi_links = stalk("https://www.toornament.com/tournaments/2324026559405285376/information")
-    for link in multi_links:
-        print(link)
+    from utils import player_lookup
+    team_list = stalk("https://www.toornament.com/tournaments/2324026559405285376/information")
+    player_lookup.add_team_list_ranks(team_list)
+    print(str(team_list))
 
 
 # test challengermode_stalker

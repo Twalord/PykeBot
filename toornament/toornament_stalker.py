@@ -6,6 +6,9 @@ import logging
 import bs4
 import time
 from webmanager import open_session, quit_session
+from models import Team, TeamList, Player
+import requests
+from utils.task_queue import TaskGroup, SingleTask, submit_task_group
 
 
 logger = logging.getLogger('scrap_logger')
@@ -33,44 +36,54 @@ def stalk(toornament_link):
     toornament_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
     team_container = toornament_soup.find_all('div', class_="size-1-of-4")
 
+    quit_session(driver)
+
+    # extract toornament name
+    tournament_name = toornament_soup.select("#main-container > div.layout-section.header > div > section > div > div.information > div.name > h1")[0].text
+
     for team in team_container:
         a = team.find('a', href=True)
         participants_links.append(base_url + a['href'])
 
     # open each link, switch to information and collect the Summoner Names
-    multi_links_tuple = []
+    single_tasks = []
     for link in participants_links:
-        driver.get(link)
-        time.sleep(0.5)
-        information_button = driver.find_element_by_xpath("//*[@id=\"main-container\"]/div[2]/section/ul/li[1]/a")
-        information_button.click()
-        time.sleep(0.5)
-        toornament_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
-        team_name = driver.find_element_by_xpath("//*[@id=\"main-container\"]/div[1]/div/div[2]/div/div[2]/div/span").text
-        name_container = toornament_soup.find_all('div', class_="text secondary small summoner_player_id")
-        names = []
-        for container in name_container:
-            dirty_string = container.text
-            dirt, name = dirty_string.split(":")
-            name = name.replace("\n", "")
-            name = name.strip()
-            names.append(name)
-        multi_links_tuple.append((team_name, build_opgg_multi_link(names)))
+        single_tasks.append(SingleTask(stalk_team, link))
+    task_group = TaskGroup(single_tasks)
 
-    quit_session(driver)
-    return multi_links_tuple
+    teams_players_tuples = submit_task_group(task_group)
+
+    # build Player, Team and TeamList objects
+    team_list = []
+    for team in teams_players_tuples:
+        sum_names = team[0]
+        team_name = team[1]
+        players = []
+        for sum_name in sum_names:
+            players.append(Player(sum_name))
+        team_list.append(Team(team_name, players))
+
+    return TeamList(tournament_name, team_list)
 
 
-def build_opgg_multi_link(sum_names):
+def stalk_team(url):
     """
-    construct a valid op.gg multi link for the given summoner names
-    :param sum_names: List[String], a list of Summonernames
-    :return: String, url to the multilink for the given names
+    Use request to gather information on a team on toornament
+    :param url: Str, url to the main page of a team
+    :return: (List[Str], Str), a tuple containing the list of player names and the team name
     """
-    region = "euw"  # static for now, should be loaded from config
-    base_url = "https://" + region + ".op.gg/multi/query="
-    multi_link = base_url
-    for sum_name in sum_names:
-        multi_link += sum_name.replace(" ", "")
-        multi_link += "%2C"
-    return multi_link
+    edited_url = url + "info"
+    page = requests.get(edited_url)
+
+    toornament_soup = bs4.BeautifulSoup(page.text, features="html.parser")
+    team_name = toornament_soup.select("#main-container > div.layout-section.header > div > div.layout-block.header > div > div.title > div > span")[0].text
+    name_container = toornament_soup.find_all('div', class_="text secondary small summoner_player_id")
+
+    names = []
+    for container in name_container:
+        dirty_string = container.text
+        dirt, name = dirty_string.split(":")
+        name = name.replace("\n", "")
+        name = name.strip()
+        names.append(name)
+    return names, team_name
