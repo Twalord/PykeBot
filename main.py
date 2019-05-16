@@ -17,9 +17,10 @@ start_bot = False
 
 tests = {"config": False,
          "battlefy_scrape": False,
-         "toornament_stalker": True,
+         "toornament_stalker": False,
          "challengermode_stalker": False,
-         "sinn_league_stalker": False}
+         "sinn_league_stalker": False,
+         "challengermode_quick_stalker": True}
 
 # test config
 if tests.get("config"):
@@ -63,6 +64,13 @@ if tests.get("sinn_league_stalker"):
     player_lookup.add_list_team_list_ranks(team_lists)
     for team_list in team_lists:
         print(team_list)
+
+
+# test challengermode quick stalker
+if tests.get("challengermode_quick_stalker"):
+    from challengermode.challengermode_stalker import quick_stalk
+    team_list =quick_stalk("https://www.challengermode.com/Challenges/View/672fa046-3b77-e911-abc4-0003ffde309b")
+    print(str(team_list))
 
 # Run Discord Bot
 if start_bot:

@@ -2,6 +2,7 @@ from utils.webmanager import open_session, quit_session
 import logging
 import time
 import bs4
+from models import Player, Team, TeamList
 
 logger = logging.getLogger('scrap_logger')
 
@@ -61,3 +62,42 @@ def stalk(challengermode_link):
         print(container)
 
     quit_session(driver)
+
+
+def quick_stalk(url):
+    """
+    Stalk all players in a match, requires a direct link to the match on challengermode
+    :param url: Str, a link that shows a single match on challengermode
+    :return: TeamList, containing both teams in the match
+    """
+
+    driver = open_session()
+    driver.get(url)
+
+    time.sleep(2)
+    challenger_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+    quit_session(driver)
+
+    team_containers = challenger_soup.find_all('div', class_="col-md-6")
+    title = challenger_soup.select("#arena-wrap > div.pos--rel.flx--1-1-auto.w--100 > div.m-b--base > div:nth-child(3) > div.pos--rel.z--999 > div.cm-arena-wrap.arena-padding-horizontal > div.ta--center.m-v--medium.p-t--base--sm.cm-text-shadow > div.h1.lh--title.ellipsis > div > a")[0].text
+
+    teams = []
+    for team_container in team_containers:
+        team_name_block = team_container.find('div', class_="dis--none dis--blk--sm m-b--minimum")
+        if team_name_block is None:
+            team_name_block = team_container.find('div', class_="dis--none dis--blk--sm m-b--minimum m-t--medium")
+        team_name_raw = team_name_block.text
+        team_name_list = team_name_raw.split(" ")
+        team_name = "".join(team_name_list[:len(team_name_list)-25]).strip()
+
+        player_opggs_htmls = team_container.find_all('a', class_="link-white-dark")
+        player_opggs = []
+        for player_opggs_html in player_opggs_htmls:
+            player_opggs.append(player_opggs_html['href'])
+        players = []
+        for player_opgg in player_opggs:
+            rest, sum_name = player_opgg.split("=")
+            players.append(Player(sum_name))
+        teams.append(Team(team_name, players))
+
+    return TeamList(title.strip(), teams)
