@@ -69,8 +69,10 @@ if tests.get("sinn_league_stalker"):
 # test challengermode quick stalker
 if tests.get("challengermode_quick_stalker"):
     from challengermode.challengermode_stalker import quick_stalk
+    from utils import player_lookup
     team_list =quick_stalk("https://www.challengermode.com/Challenges/View/672fa046-3b77-e911-abc4-0003ffde309b")
-    print(str(team_list))
+    player_lookup.add_team_list_ranks(team_list)
+    print(team_list.extended_str())
 
 # Run Discord Bot
 if start_bot:

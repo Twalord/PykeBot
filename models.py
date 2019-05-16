@@ -321,6 +321,12 @@ class Team:
         else:
             return self.name + " Ø: " + str(self.average_rank) + " max: " + str(self.max_rank) + " | " + self.multi_link
 
+    def extended_str(self):
+        out = str(self) + "\n"
+        for player in self.player_list:
+            out += str(player) + " | "
+        return out[:-3]
+
 
 @dataclass
 class TeamList:
@@ -334,4 +340,10 @@ class TeamList:
         out = self.name + "\n"
         for team in self.teams:
             out += str(team) + "\n"
+        return out
+
+    def extended_str(self):
+        out = self.name + "\n"
+        for team in self.teams:
+            out += team.extended_str() + "\n"
         return out

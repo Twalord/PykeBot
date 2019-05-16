@@ -97,7 +97,7 @@ def quick_stalk(url):
         players = []
         for player_opgg in player_opggs:
             rest, sum_name = player_opgg.split("=")
-            players.append(Player(sum_name))
+            players.append(Player(sum_name.replace("+", " ")))
         teams.append(Team(team_name, players))
 
     return TeamList(title.strip(), teams)
