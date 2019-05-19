@@ -52,7 +52,7 @@ def add_list_team_list_ranks(team_lists):
     for team_list in team_lists:
         single_tasks.append(task_queue.SingleTask(add_team_list_ranks, team_list))
 
-    task_group = task_queue.TaskGroup(single_tasks)
+    task_group = task_queue.TaskGroup(single_tasks, "add ranks to team lists")
     task_queue.submit_task_group(task_group)
 
 
@@ -67,7 +67,7 @@ def add_team_list_ranks(team_list: TeamList):
     for team in teams:
         single_tasks.append(task_queue.SingleTask(add_team_ranks, team))
 
-    task_group = task_queue.TaskGroup(single_tasks)
+    task_group = task_queue.TaskGroup(single_tasks, "add ranks to team list")
     task_queue.submit_task_group(task_group)
 
 

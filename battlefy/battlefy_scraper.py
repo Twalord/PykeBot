@@ -327,8 +327,11 @@ def find_link(name, host, driver):
     host_url = host.replace(" ", "-").lower()
     host_page = base_url + host_url
     driver.get(host_page)
+    time.sleep(1)
 
+    # TODO deep scraping is currently unable to find this search box
     search_box = driver.find_element_by_xpath("//*[@id=\"org-hub\"]/div[2]/ui-view/bf-organization-tournaments/bf-org-tournament-list/div/div[1]/div/div[1]/bf-search-input/div/input")
+    # search_box = driver.find_element_by_css_selector("#abId0\\2e 8249078150599616 > input")
     search_box.send_keys(name)
     search_box.send_keys(Keys.ENTER)
     time.sleep(1)

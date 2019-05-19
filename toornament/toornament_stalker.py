@@ -49,7 +49,7 @@ def stalk(toornament_link):
     single_tasks = []
     for link in participants_links:
         single_tasks.append(SingleTask(stalk_team, link))
-    task_group = TaskGroup(single_tasks)
+    task_group = TaskGroup(single_tasks, "stalk: " + tournament_name)
 
     teams_players_tuples = submit_task_group(task_group)
 

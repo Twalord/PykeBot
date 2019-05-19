@@ -9,8 +9,9 @@ logger = logging.getLogger('scrap_logger')
 
 def stalk(challengermode_link):
 
+    return
     # open a websession
-    driver = open_session(headless=False)
+    driver = open_session(headless=True)
     driver.get(challengermode_link)
 
     # find the teams button and press it
@@ -22,13 +23,9 @@ def stalk(challengermode_link):
     each dropdown has to be opened one at a time, as they will be closed again automatically
     lazy loading is used and it needs to be scrolled down to load more elements
 
-    solution use a counter
-    1. scroll down and collect all team names and assign numbers to them (not all teams are shown at the same time)
-    2. iterate over the team names via the class cm-component
-    3. use click to open dropdown and download html doc again
-    4. extract div class="p-b--small p-h--base p-h--small--md p-h--none--sm"
-    5. scroll down to keep loading all teams
-    6. extract infos from each container and create objects
+    1. scroll down and collect all team names and hrefs while filtering out duplicates
+    2. iterate over the hrefs as subtasks to gather all teams
+    3. extract infos for each team
     """
 
     team_container = []
@@ -62,6 +59,8 @@ def stalk(challengermode_link):
         print(container)
 
     quit_session(driver)
+
+    return
 
 
 def quick_stalk(url):

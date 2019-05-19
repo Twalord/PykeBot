@@ -49,7 +49,7 @@ def call_taskmaster(args: List[str], is_scrape: bool):
         tasks.append(task)
 
     # create TaskGroup
-    task_group = TaskGroup(tasks)
+    task_group = TaskGroup(tasks, "calls: " + str(calls))
 
     # submit TaskGroup to multiprocessing
     logger.debug("Submitting TaskGroup with " + str(task_group.task_count) + " tasks")

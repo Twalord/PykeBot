@@ -65,7 +65,7 @@ def stalk(url):
     for link in links:
         single_task = task_queue.SingleTask(stalk_group, link)
         single_tasks.append(single_task)
-    task_group = task_queue.TaskGroup(single_tasks)
+    task_group = task_queue.TaskGroup(single_tasks, "stalk: " + url)
 
     logger.info("Stalking " + str(len(single_tasks)) + " groups in SINN League")
     team_lists = task_queue.submit_task_group(task_group)
@@ -113,7 +113,7 @@ def stalk_group(url):
     for link in links:
         single_task = task_queue.SingleTask(stalk_team, link)
         single_tasks.append(single_task)
-    task_group = task_queue.TaskGroup(single_tasks)
+    task_group = task_queue.TaskGroup(single_tasks, "stalk: " + div_name)
 
     teams = task_queue.submit_task_group(task_group)
 

@@ -19,8 +19,8 @@ tests = {"config": False,
          "battlefy_scrape": False,
          "toornament_stalker": False,
          "challengermode_stalker": False,
-         "sinn_league_stalker": False,
-         "challengermode_quick_stalker": True}
+         "sinn_league_stalker": True,
+         "challengermode_quick_stalker": False}
 
 # test config
 if tests.get("config"):
@@ -34,7 +34,7 @@ if tests.get("config"):
 # test battlefy scrape
 if tests.get("battlefy_scrape"):
     from battlefy.battlefy_scraper import scrape
-    battlefy_tournaments = scrape(scrape_deep=True)
+    battlefy_tournaments = scrape(scrape_deep=False)
     filtered_tournaments = battlefy_tournaments.filter_format(form="ARAM")
     logger.debug("listing " + str(len(filtered_tournaments)) + " tournaments")
     print(str(filtered_tournaments))
