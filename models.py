@@ -347,3 +347,23 @@ class TeamList:
         for team in self.teams:
             out += team.extended_str() + "\n"
         return out
+
+
+@dataclass
+class TeamListList:
+    """
+    Saves a list of TeamList objects
+    """
+    team_lists: List[TeamList]
+
+    def __str__(self):
+        out = ""
+        for team_list in self.team_lists:
+            out += str(team_list)
+        return out
+
+    def extended_str(self):
+        out = ""
+        for team_list in self.team_lists:
+            out += team_list.extended_str()
+        return out

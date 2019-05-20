@@ -7,7 +7,7 @@ from utils.webmanager import open_session, quit_session
 import logging
 import time
 import bs4
-from models import Player, Team, TeamList
+from models import Player, Team, TeamList, TeamListList
 from utils import task_queue
 from selenium.common.exceptions import ElementClickInterceptedException
 import requests
@@ -72,7 +72,7 @@ def stalk(url):
 
     # return results
     logger.info("Finished SINN League stalking")
-    return team_lists
+    return TeamListList(team_lists)
 
 
 def filter_links(link):

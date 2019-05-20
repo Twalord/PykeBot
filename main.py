@@ -1,5 +1,5 @@
 """
-Main module for the League_Tournament_Scraper.
+Main module for the League_Tournament_Stalker.
 
 Only used for testing for now.
 :author: Jonathan Decker
@@ -13,13 +13,13 @@ start_time = time.perf_counter()
 logger = scrap_logger.setup_logger()
 logger.debug("Start of program")
 
-start_bot = False
+start_bot = True
 
 tests = {"config": False,
          "battlefy_scrape": False,
          "toornament_stalker": False,
          "challengermode_stalker": False,
-         "sinn_league_stalker": True,
+         "sinn_league_stalker": False,
          "challengermode_quick_stalker": False}
 
 # test config
