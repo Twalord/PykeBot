@@ -73,7 +73,7 @@ def quick_stalk(url):
     driver = open_session()
     driver.get(url)
 
-    time.sleep(2)
+    time.sleep(3)
     challenger_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
     quit_session(driver)
 

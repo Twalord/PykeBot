@@ -3,6 +3,8 @@ Contains integration tests for the main features
 
 :author: Jonathan Decker
 """
+
+
 def test_config():
     import os
     os.chdir("..")
@@ -24,16 +26,6 @@ def test_config():
     assert config.get_battlefy_url(battlefy_url[1]) == battlefy_url[0]
     assert config.get_timezone() == timezone
     assert config.get_websites() == websites
-
-
-def test_normal_battlefy_scrape():
-    from battlefy.battlefy_scraper import scrape
-    from models import TournamentList
-    battlefy_tournaments = scrape()
-    filtered_tournaments = battlefy_tournaments.filter_format(form="ARAM")
-
-    assert len(filtered_tournaments) > 0
-    assert isinstance(filtered_tournaments, TournamentList)
 
 
 def test_toornaments_stalker():
@@ -70,7 +62,7 @@ def test_sinn_league_stalker():
     url = "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3"
     team_lists = sinn_league_stalker.stalk(url)
 
-    for team_list in team_lists:
+    for team_list in team_lists.team_lists:
         assert type(str(team_list)) == str
         assert len(team_list.teams) > 0
         assert isinstance(team_list, TeamList)
@@ -84,3 +76,21 @@ def test_challengermode_quick_stalker():
     assert type(str(team_list)) == str
     assert len(team_list.teams) > 0
     assert isinstance(team_list, TeamList)
+
+
+def test_stalkmaster():
+    from stalkmaster import call_stalk_master
+    urls = ["https://www.toornament.com/tournaments/2324026559405285376/information",
+            "https://www.challengermode.com/Challenges/View/672fa046-3b77-e911-abc4-0003ffde309b",
+            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/group/209-gruppenphase/5055-division-1-1",
+            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/group/209-gruppenphase/3452-gruppe-3-2",
+            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/teams/94634-unicorns-of-love",
+            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3"]
+    for url in urls:
+        out = call_stalk_master(url)
+        assert type(out) == str
+        assert len(out) > 0
+
+    out = call_stalk_master(urls[0], True)
+    assert type(out) == str
+    assert len(out) > 0

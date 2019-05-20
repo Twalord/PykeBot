@@ -16,7 +16,6 @@ logger.debug("Start of program")
 start_bot = True
 
 tests = {"config": False,
-         "battlefy_scrape": False,
          "toornament_stalker": False,
          "challengermode_stalker": False,
          "sinn_league_stalker": False,
@@ -29,15 +28,6 @@ if tests.get("config"):
     config.set_battlefy_url("https://battlefy.com/browse/league-of-legends?region=EU%20West&type=Any%20Format", "EUW")
     config.set_timezone("CET")
     config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
-
-
-# test battlefy scrape
-if tests.get("battlefy_scrape"):
-    from battlefy.battlefy_scraper import scrape
-    battlefy_tournaments = scrape(scrape_deep=False)
-    filtered_tournaments = battlefy_tournaments.filter_format(form="ARAM")
-    logger.debug("listing " + str(len(filtered_tournaments)) + " tournaments")
-    print(str(filtered_tournaments))
 
 
 # test toornament_stalker
