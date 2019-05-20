@@ -7,58 +7,40 @@ from models import Player, Team, TeamList
 logger = logging.getLogger('scrap_logger')
 
 
-def stalk(challengermode_link):
+def stalk(url: str):
 
-    return
+    # edit url
+    url = url.replace("Show", "Participants")
+
     # open a websession
     driver = open_session(headless=True)
-    driver.get(challengermode_link)
+    driver.get(url)
 
-    # find the teams button and press it
-    teams_button = driver.find_element_by_xpath("//*[@id=\"arena-wrap\"]/div[3]/div[3]/div[3]/div/div[1]/a[4]")
-    teams_button.click()
-    time.sleep(0.5)
+    all_links = []
+    # scroll down one page until end of page
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    while True:
+        # snapshot source and collect all hrefs from container
+        soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+        team_conainter = soup.find('div', class_="cm-arena-wrap")
 
-    """
-    each dropdown has to be opened one at a time, as they will be closed again automatically
-    lazy loading is used and it needs to be scrolled down to load more elements
+        links = [link["href"] for link in team_conainter.find_all("a", href=True)]
+        all_links = all_links + links
+        all_links = list(dict.fromkeys(all_links))
 
-    1. scroll down and collect all team names and hrefs while filtering out duplicates
-    2. iterate over the hrefs as subtasks to gather all teams
-    3. extract infos for each team
-    """
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-    team_container = []
-    teams_dropdown = driver.find_elements_by_class_name("cm-component")
-    for dropdown in teams_dropdown:
-        dropdown.click()
+        # Wait to load page
         time.sleep(0.5)
-        #container = driver.find_element_by_class_name("bor--bot bor--gray bg--gray-dark--30 c--white")
-        #team_container.append(container)
-        dropdown.click()
-        time.sleep(0.1)
 
-    # open exception if no more teams are on page
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
 
-    # save each team name and their number as triple with number, name, None
-
-    # iterate over the triples scrolling down if not on page
-
-    # open dropdown reload the page
-
-    # extract container and save it to the 3rd space of the triple
-
-    # close the dropdown reload the page
-
-
-
-    # iterate through all container extracting all player names and the team name
-    for container in team_container:
-        team_name = bs4.BeautifulSoup(container).find('a', class_="link-white").text
-        print(team_name)
-        print(container)
-
-    quit_session(driver)
+    # TODO finish challengermode stalker, still need a good solution
 
     return
 

@@ -13,11 +13,11 @@ start_time = time.perf_counter()
 logger = scrap_logger.setup_logger()
 logger.debug("Start of program")
 
-start_bot = True
+start_bot = False
 
 tests = {"config": False,
          "toornament_stalker": False,
-         "challengermode_stalker": False,
+         "challengermode_stalker": True,
          "sinn_league_stalker": False,
          "challengermode_quick_stalker": False}
 
@@ -42,7 +42,10 @@ if tests.get("toornament_stalker"):
 # test challengermode_stalker
 if tests.get("challengermode_stalker"):
     from challengermode.challengermode_stalker import stalk as stalk_challengermode
-    stalk_challengermode("https://www.challengermode.com/Tournaments/Show/30ddf5f5-5e59-e911-b49d-28187814ffef")
+    from utils import player_lookup
+    team_list = stalk_challengermode("https://www.challengermode.com/Tournaments/Show/8a4b496c-0478-e911-abc4-281878344205")
+    player_lookup.add_team_list_ranks(team_list)
+    print(str(team_list))
 
 
 # test sinn_league_stalker
