@@ -6,7 +6,7 @@ Provides functions to look up player rankings online and calculate average team 
 
 import logging
 import bs4
-from models import Player, Team, TeamList, Rank
+from models import Player, Team, TeamList, Rank, TeamListList
 from utils import task_queue
 import requests
 
@@ -42,14 +42,14 @@ def calc_average_max_rank(team):
     return team
 
 
-def add_list_team_list_ranks(team_lists):
+def add_list_team_list_ranks(team_list_list: TeamListList):
     """
     Calls add_team_lists_ranks for every given team_list
     :param team_lists: List[TeamList], a list of TeamList objects
     :return: None, but the Team and Player objects inside were modified
     """
     single_tasks = []
-    for team_list in team_lists:
+    for team_list in team_list_list.team_lists:
         single_tasks.append(task_queue.SingleTask(add_team_list_ranks, team_list))
 
     task_group = task_queue.TaskGroup(single_tasks, "add ranks to team lists")

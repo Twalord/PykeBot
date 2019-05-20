@@ -115,6 +115,29 @@ async def stalk(ctx, *args):
         await ctx.send(out)
 
 
+@bot.command(name='extstalk',
+             pass_context=True)
+async def ext_stalk(ctx, *args):
+    logger.debug("received user command scrape " + str(args))
+    # prepare asyncio loop to avoid timeout
+    loop = asyncio.get_event_loop()
+    arg_list = list(args)
+    if not len(arg_list) == 1:
+        await ctx.send("Usage is !stalk <url>")
+        return
+
+    def sub_proc():
+        return call_stalk_master(arg_list[0], extendend=True)
+
+    # call taskmaster with args and is_scrape = True
+    out_raw = await loop.run_in_executor(ThreadPoolExecutor(), sub_proc)
+
+    # chunk und send results
+    out_chunked = chunk_message(out_raw)
+    for out in out_chunked:
+        await ctx.send(out)
+
+
 async def update_client_presence(status: str):
     """
     Updates the bots presence to the given status, always with playing at front
@@ -122,6 +145,7 @@ async def update_client_presence(status: str):
     :return: None, but the bots presence was changed
     """
     await bot.change_presence(activity=Game(name=status))
+
 
 """
 @bot.command(name='scrape',

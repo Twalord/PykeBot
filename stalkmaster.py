@@ -1,8 +1,14 @@
+"""
+Handles interpreting commands and calling the respective stalker
+
+:author: Jonathan Decker
+"""
 import logging
 from challengermode import challengermode_stalker
 from toornament import toornament_stalker
 from sinn_league import sinn_league_stalker
-from utils import task_queue
+from utils import task_queue, player_lookup
+from models import Team, TeamList, TeamListList
 
 
 logger = logging.getLogger('scrap_logger')
@@ -15,7 +21,7 @@ class UnknownUrlError(Exception):
     pass
 
 
-def call_stalk_master(url) -> str:
+def call_stalk_master(url, extendend=False) -> str:
     # call url matcher to find out which stalker to use
     try:
         stalker = url_matcher(url)
@@ -26,12 +32,21 @@ def call_stalk_master(url) -> str:
     single_task = [task_queue.SingleTask(stalker, url)]
     task_group = task_queue.TaskGroup(single_task, stalker.__name__)
 
-    results = task_queue.submit_task_group(task_group)
+    results = task_queue.submit_task_group(task_group)[0]
 
     # prepare output
-    # TODO add a swtich for extended output
+    if extendend:
+        if isinstance(results, TeamListList):
+            player_lookup.add_list_team_list_ranks(results)
+        elif isinstance(results, TeamList):
+            player_lookup.add_team_list_ranks(results)
+        elif isinstance(results, Team):
+            player_lookup.add_team_ranks(results)
 
-    out = str(results[0])
+        out = results.extended_str()
+
+    else:
+        out = str(results)
 
     # return
     return out
