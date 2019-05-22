@@ -39,7 +39,7 @@ def load_config(file='config.ini', delete_config=False):
         # if config file is missing a default config is created from the template
         if template not in pathlib.Path.cwd().iterdir():
             logger.error("Config template file " + str(template) + " not found!")
-            logger.info(list(pathlib.Path.cwd().iterdir()))
+            logger.error(list(pathlib.Path.cwd().iterdir()))
         else:
             shutil.copy(str(template), str(abs_file))
 
