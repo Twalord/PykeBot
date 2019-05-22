@@ -10,6 +10,7 @@ import logging
 import shutil
 import functools
 import pytz
+from os import environ
 
 
 logger = logging.getLogger('scrap_logger')
@@ -23,23 +24,34 @@ def load_config(file='config.ini', delete_config=False):
     :return: Configparser, the parser has read the config file and handles the live config
     """
 
+    # check if Travis is active
+    travis = False
+    try:
+        travis = environ['TRAVIS']
+    except:
+        pass
+
     # check if config file exists
-    abs_file = pathlib.Path.cwd() / file
+    if travis:
+        abs_path = environ['TRAVIS_BUILD_DIR']
+    else:
+        abs_path = pathlib.Path.cwd()
+    abs_file = abs_path / file
     if delete_config:
         logger.warning("Deleting config file.")
-        if abs_file in pathlib.Path.cwd().iterdir():
+        if abs_file in abs_path.iterdir():
             pathlib.Path.unlink(abs_file)
             logger.info("Deleted config file.")
         else:
             logger.warning("Failed to delete config file.")
-    if abs_file not in pathlib.Path.cwd().iterdir():
+    if abs_file not in abs_path.iterdir():
         logger.warning("Config file " + file + " not found!")
-        template = pathlib.Path.cwd() / pathlib.Path('template_' + file)
+        template = abs_path / pathlib.Path('template_' + file)
         logger.warning("Trying to create config file from template " + str(template))
         # if config file is missing a default config is created from the template
-        if template not in pathlib.Path.cwd().iterdir():
+        if template not in abs_path.iterdir():
             logger.error("Config template file " + str(template) + " not found!")
-            logger.error(*pathlib.Path.cwd().iterdir())
+            logger.error(*abs_path.iterdir())
         else:
             shutil.copy(str(template), str(abs_file))
 
