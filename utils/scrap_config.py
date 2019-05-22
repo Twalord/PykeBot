@@ -57,7 +57,7 @@ def load_config(file='config.ini', delete_config=False):
 
             logger.info("Created config file from template.")
     config = configparser.ConfigParser(interpolation=None)
-    config.read(file)
+    config.read(abs_path / file)
 
     return config
 
