@@ -21,6 +21,10 @@ class UnknownUrlError(Exception):
     pass
 
 
+def feature_not_implemented_yet(*args):
+    return "This feature is not ready yet."
+
+
 def call_stalk_master(url, extendend=False) -> str:
     # call url matcher to find out which stalker to use
     try:
@@ -98,7 +102,7 @@ def url_matcher(url):
             raise UnknownUrlError
 
     stalker_lookup = {"challengermode": {"match": challengermode_stalker.quick_stalk,
-                                         "tournament": challengermode_stalker.stalk},
+                                         "tournament": feature_not_implemented_yet},
                       "toornament": {"tournament": toornament_stalker.stalk},
                       "summoners-inn": {"season": sinn_league_stalker.stalk,
                                         "group": sinn_league_stalker.stalk_group,

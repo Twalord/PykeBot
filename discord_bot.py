@@ -152,7 +152,8 @@ async def update_client_presence(status: str):
 async def update_region(ctx, *args):
     arg_list = list(args)
     if len(arg_list) == 1:
-        new_region = config.set_region(arg_list[0])
-        ctx.send(f"Region setting has been changed to {new_region}")
+        config.set_region(arg_list[0])
+        new_region = config.get_region()
+        await ctx.send(f"Region setting has been changed to {new_region}")
     else:
-        ctx.send("Usage is !setregion region")
+        await ctx.send("Usage is !setregion region")

@@ -28,10 +28,25 @@ Available commands are:
 
 !setregion region
 
-"stalk" will return team names and multilinks for teams in the given tournament.
+"stalk" will return team names and multilinks for teams in the given tournament or match.
 "extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
 "setregion" will update the region used in the multilinks and player lookups.
 
+## Features
+
+The following links can be stalked:
+
+Challengermode Matches
+
+Summoners INN League Seasons
+
+Summoners INN League Groups
+
+Summoners INN League Teams
+
+Toornament Tournaments
+
 ## TODO
 
+- finish challengermode tournament stalker
 - add support for esl page stalking

@@ -49,7 +49,8 @@ def load_config(file='config.ini', delete_config=False):
     return config
 
 
-config = load_config(delete_config=True)
+# delete config can be set for debugging purposes
+config = load_config()
 
 
 def update_config(func):
@@ -124,11 +125,10 @@ def blank_getter(section, option):
 @try_config()
 def get_region():
     """
-    Returns a list of all regions selected.
+    Returns the region as string
     :return: String, contains the current region
     """
 
-    # returns the list of regions
     return config["GENERAL"]["REGION"]
 
 
@@ -161,17 +161,16 @@ def blank_setter(section, option, value):
 @try_config(is_getter=False)
 def set_region(region):
     """
-    Set regions to a given list of regions, for example "EUW"
+    Set region to a given string, for example "EUW"
     :param region: String, the abbreviation of the selected Region
     :return: None, but config is updated
     """
 
     if isinstance(region, str):
-        config.set("GENERAL", "REGIONS", region)
+        config.set("GENERAL", "REGION", region)
     else:
-        logger.error("Can't change regions config, given value has the wrong type")
+        logger.error("Can't change region config, given value has the wrong type")
         logger.debug("given type: " + str(type(region)) + " required: 'str'")
-    return get_region()
 
 
 @update_config
