@@ -104,6 +104,10 @@ async def ping(ctx):
 
 
 @bot.command(name='stalk',
+             description="Gathers all player names and builds multilinks per team in the given link to a tournament or"
+                         "match. Supported are Challengermode matches, Toornament tournaments, SINN League seasons,"
+                         "groups and teams.",
+             brief="stalk will return team names and multilinks for teams in the given tournament or match.",
              pass_context=True)
 async def stalk(ctx, *args):
     logger.info("received user command scrape " + str(args))
@@ -127,6 +131,9 @@ async def stalk(ctx, *args):
 
 
 @bot.command(name='extstalk',
+             description="Same as stalk but in addition the bot will look up the current soloQ ranking for each player"
+                         "on op.gg and add it to the output. This might take longer.",
+             brief="Same as stalk but also gathers player rankings.",
              pass_context=True)
 async def ext_stalk(ctx, *args):
     logger.info("received user command scrape " + str(args))
@@ -159,6 +166,9 @@ async def update_client_presence(status: str):
 
 
 @bot.command(name='setregion',
+             description="Sets the region used for player lookups. The abbreviation format should be used so EUW for"
+                         "Europe West, NA for North America and so on.",
+             brief="Sets the region used for player lookups.",
              pass_context=True)
 async def update_region(ctx, *args):
     logger.info("received user command scrape " + str(args))
