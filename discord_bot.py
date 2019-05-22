@@ -100,7 +100,7 @@ async def stalk(ctx, *args):
     loop = asyncio.get_event_loop()
     arg_list = list(args)
     if not len(arg_list) == 1:
-        await ctx.send("Usage is !stalk <url>")
+        await ctx.send("Usage is !stalk url")
         return
 
     def sub_proc():
@@ -123,7 +123,7 @@ async def ext_stalk(ctx, *args):
     loop = asyncio.get_event_loop()
     arg_list = list(args)
     if not len(arg_list) == 1:
-        await ctx.send("Usage is !stalk <url>")
+        await ctx.send("Usage is !stalk url")
         return
 
     def sub_proc():
@@ -147,28 +147,12 @@ async def update_client_presence(status: str):
     await bot.change_presence(activity=Game(name=status))
 
 
-"""
-@bot.command(name='scrape',
+@bot.command(name='setregion',
              pass_context=True)
-async def scrape(ctx, *args):
-    #Initialises a scrape for tournament information based on the given args
-    #:param ctx: Context
-    #:param args: tuple(str), the args are checked for validity based on the lookups in taskmaster
-    #:return: None, but the results of the scrape are send to the context
-    logger.debug("received user command scrape " + str(args))
-    # prepare asyncio loop to avoid timeout
-    loop = asyncio.get_event_loop()
+async def update_region(ctx, *args):
     arg_list = list(args)
-
-    def sub_proc():
-        return call_taskmaster(arg_list, True)
-
-    # call taskmaster with args and is_scrape = True
-    out_raw = await loop.run_in_executor(ThreadPoolExecutor(), sub_proc)
-
-    # chunk und send results
-    out_chunked = chunk_message(out_raw)
-    for out in out_chunked:
-        await ctx.send(out)
-
-"""
+    if len(arg_list) == 1:
+        new_region = config.set_region(arg_list[0])
+        ctx.send(f"Region setting has been changed to {new_region}")
+    else:
+        ctx.send("Usage is !setregion region")

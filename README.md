@@ -22,12 +22,15 @@ The bot also requires a valid Discord api token which needs to be placed in a fi
 Running main.py will start the Discord Bot which will await commands.
 Available commands are:
 
-!stalk <url>
+!stalk url
 
-!extstalk <url>
+!extstalk url
+
+!setregion region
 
 "stalk" will return team names and multilinks for teams in the given tournament.
 "extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
+"setregion" will update the region used in the multilinks and player lookups.
 
 ## TODO
 
