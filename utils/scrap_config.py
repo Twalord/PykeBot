@@ -33,7 +33,7 @@ def load_config(file='config.ini', delete_config=False):
 
     # check if config file exists
     if travis:
-        abs_path = environ['TRAVIS_BUILD_DIR']
+        abs_path = pathlib.Path(environ['TRAVIS_BUILD_DIR'])
     else:
         abs_path = pathlib.Path.cwd()
     abs_file = abs_path / file
