@@ -40,7 +40,7 @@ def stalk(url: str):
             break
         last_height = new_height
 
-    # TODO finish challengermode stalker, still need a good solution
+    # TODO finish challengermode stalker, still needs a good solution
 
     return
 
@@ -52,6 +52,7 @@ def quick_stalk(url):
     :return: TeamList, containing both teams in the match
     """
 
+    logger.debug("Beginning challengermode quick stalk for " + url)
     driver = open_session()
     driver.get(url)
 

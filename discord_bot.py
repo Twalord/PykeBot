@@ -26,21 +26,29 @@ logger = logging.getLogger('scrap_logger')
 bot = commands.Bot(command_prefix="!")
 
 
+class NoTokenFoundError(Exception):
+    """
+    Raised when no Discord Bot Token was found
+    """
+    logger.error("No Bot Token was found. The Discord Bot API Token needs to be placed in a file called TOKEN")
+
+
 def load_token():
     """
     Load the Bot Token from a file.
     A file called TOKEN must be provided containing only the token
     :return: String, the Bot Token
     """
-    logger.debug("Trying to load Bot token")
+    logger.info("Trying to load Bot token")
     f = open("TOKEN", "r")
     token = ""
     token = f.readline()
     f.close()
     if len(token) > 0:
-        logger.debug("Loaded Token.")
+        logger.info("Loaded Token.")
     else:
-        logger.debug("No Token found.")
+        logger.error("No Token found.")
+        raise NoTokenFoundError
     return token
 
 
@@ -50,7 +58,10 @@ def run_bot():
     :return: None
     """
     logger.info("Starting Discord Bot")
-    token = load_token()
+    try:
+        token = load_token()
+    except NoTokenFoundError:
+        return
     bot.run(token)
 
 
@@ -95,7 +106,7 @@ async def ping(ctx):
 @bot.command(name='stalk',
              pass_context=True)
 async def stalk(ctx, *args):
-    logger.debug("received user command scrape " + str(args))
+    logger.info("received user command scrape " + str(args))
     # prepare asyncio loop to avoid timeout
     loop = asyncio.get_event_loop()
     arg_list = list(args)
@@ -118,7 +129,7 @@ async def stalk(ctx, *args):
 @bot.command(name='extstalk',
              pass_context=True)
 async def ext_stalk(ctx, *args):
-    logger.debug("received user command scrape " + str(args))
+    logger.info("received user command scrape " + str(args))
     # prepare asyncio loop to avoid timeout
     loop = asyncio.get_event_loop()
     arg_list = list(args)
@@ -150,6 +161,7 @@ async def update_client_presence(status: str):
 @bot.command(name='setregion',
              pass_context=True)
 async def update_region(ctx, *args):
+    logger.info("received user command scrape " + str(args))
     arg_list = list(args)
     if len(arg_list) == 1:
         config.set_region(arg_list[0])

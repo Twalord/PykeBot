@@ -7,10 +7,11 @@ Only used for testing for now.
 
 from utils import scrap_logger
 import time
+import logging
 start_time = time.perf_counter()
 
 # setup logger
-logger = scrap_logger.setup_logger()
+logger = scrap_logger.setup_logger(console_level=logging.INFO, log_file_level=logging.DEBUG)
 logger.debug("Start of program")
 
 # Run Discord Bot

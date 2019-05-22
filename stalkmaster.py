@@ -29,7 +29,9 @@ def call_stalk_master(url, extendend=False) -> str:
     # call url matcher to find out which stalker to use
     try:
         stalker = url_matcher(url)
+        logger.debug(url + " will be handled by " + stalker.__name__)
     except UnknownUrlError:
+        logger.warning("User submitted an invalid url: " + url)
         return f"The given URL could not be matched with any available tool. The URL was: {url}"
 
     # create task for stalker
@@ -100,6 +102,8 @@ def url_matcher(url):
             website_type = "season"
         else:
             raise UnknownUrlError
+
+    logger.debug(url + " has been detected as " + website + " and " + website_type)
 
     stalker_lookup = {"challengermode": {"match": challengermode_stalker.quick_stalk,
                                          "tournament": feature_not_implemented_yet},

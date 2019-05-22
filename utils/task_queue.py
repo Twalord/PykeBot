@@ -52,7 +52,7 @@ def submit_task_group(tg: TaskGroup, max_workers=20):
         future_to_task = {executor.submit(task.execute): task for task in tg.tasks}
         t_count = tg.task_count
         if len(tg.name) > 0:
-            logger.debug(f"{str(t_count)} tasks have been submitted for {tg.name}")
+            logger.info(f"{str(t_count)} tasks have been submitted for {tg.name}")
         else:
             logger.debug(str(t_count) + " tasks have been submitted.")
         for future in concurrent.futures.as_completed(future_to_task):
@@ -66,7 +66,7 @@ def submit_task_group(tg: TaskGroup, max_workers=20):
                 logger.error('%r generated an exception: %s' % (st, exc))
                 logger.debug(traceback_string)
         if len(tg.name) > 0:
-            logger.debug(f"Taskgroup {tg.name} has finished")
+            logger.info(f"Taskgroup {tg.name} has finished")
 
     # return results
     return results

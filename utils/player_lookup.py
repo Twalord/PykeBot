@@ -22,6 +22,8 @@ def calc_average_max_rank(team):
     :param team: Team, a Team object containing a list of players with set ranks
     :return: Team, the same object that was given but with its average and max rank set
     """
+
+    logger.debug("calculating average and max rank for the team " + team.name)
     ranks = []
     for player in team.player_list:
         if player.rank is not None and player.rank.rating > 0:
@@ -49,6 +51,8 @@ def add_list_team_list_ranks(team_list_list: TeamListList):
     :param team_lists: List[TeamList], a list of TeamList objects
     :return: None, but the Team and Player objects inside were modified
     """
+
+    logger.debug("Beginning rank stalking for a list of team lists")
     single_tasks = []
     for team_list in team_list_list.team_lists:
         single_tasks.append(task_queue.SingleTask(add_team_list_ranks, team_list))
@@ -63,6 +67,8 @@ def add_team_list_ranks(team_list: TeamList):
     :param team_list: TeamList, a TeamList object containing a list of Teams
     :return: None, but the Team and player objects inside were modified
     """
+
+    logger.debug("Beginning rank stalking for the team list " + team_list.name)
     teams = team_list.teams
     single_tasks = []
     for team in teams:
@@ -78,6 +84,8 @@ def add_team_ranks(team: Team):
     :param team: Team, a Team object with a set list of players
     :return: Team, the same object with added ranks for the players and average and max rank for the team
     """
+
+    logger.debug("Beginning rank stalking for the team " + team.name)
     player_list = team.player_list
     updated_list = []
     for player in player_list:
@@ -93,6 +101,7 @@ def add_player_rank(player: Player):
     :param player: Player, a Player object with a summoner_name
     :return: Player, Player object with the same summoner_name and a set Rank
     """
+
     sum_name = player.summoner_name
     elo = stalk_player_opgg(sum_name).lower()
     if elo in rank_lookup:
@@ -116,6 +125,7 @@ def stalk_player_lolprofile(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
+
     region = config.get_region()
     base_url = f"https://lolprofile.net/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "%20")
@@ -134,6 +144,7 @@ def stalk_player_opgg(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
+
     region = config.get_region()
     base_url = f"https://{region}.op.gg/summoner/userName="
     url = base_url + sum_name.replace(" ", "+")
@@ -152,6 +163,7 @@ def stalk_player_mobalytics(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
+
     region = config.get_region()
     base_url = f"https://lol.mobalytics.gg/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "%20")
@@ -170,6 +182,7 @@ def stalk_player_leagueofgraphs(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
+
     region = config.get_region()
     base_url = f"https://www.leagueofgraphs.com/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "+")

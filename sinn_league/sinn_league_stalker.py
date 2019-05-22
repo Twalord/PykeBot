@@ -22,6 +22,7 @@ def stalk(url):
     :return: List[TeamList], a list of TeamList objects with each TeamList representing a group
     """
     # open web session
+    logger.debug("Beginning sinn league season stalk for " + url)
     driver = open_session()
 
     driver.get(url)
@@ -95,6 +96,8 @@ def stalk_group(url):
     :param url: Str, a link to a group in a SINN League
     :return: TeamList, a TeamList object containing all teams of the group
     """
+
+    logger.debug("Beginning sinn league group stalk for " + url)
     # open web session
     page = requests.get(url)
 
@@ -130,6 +133,8 @@ def stalk_team(url):
     :param url: Str, a link to a team on the SINN League page
     :return: Team, a Team object containing all valid players from the Team
     """
+
+    logger.debug("Beginning sinn league team stalk for " + url)
     # open web session
     page = requests.get(url)
 

@@ -168,6 +168,7 @@ def set_region(region):
 
     if isinstance(region, str):
         config.set("GENERAL", "REGION", region)
+        logger.info("Config region has been updated to " + get_region())
     else:
         logger.error("Can't change region config, given value has the wrong type")
         logger.debug("given type: " + str(type(region)) + " required: 'str'")
@@ -185,6 +186,7 @@ def set_timezone(timezone):
     if isinstance(timezone, (str, )):
         if timezone in pytz.all_timezones:
             config.set("GENERAL", "TIMEZONE", timezone)
+            logger.info("Config timezone has been updated to " + get_timezone())
         else:
             logger.error("Can't change timezone config, given value is not a valid timezone")
             logger.debug("given value: " + timezone)

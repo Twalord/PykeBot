@@ -2,8 +2,6 @@
 Contains lookup tables for various modules
 :author: Jonathan Decker
 """
-# define the lookup table, should be updated when adding functions
-from toornament.toornament_stalker import stalk as toornament_stalk
 
 """
 lookup tables for player_lookup to understand player rankings

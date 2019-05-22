@@ -21,6 +21,7 @@ def stalk(toornament_link):
     :return: List[(String, String)], containing a tuple with the team name and the op.gg multi links for each team
     """
 
+    logger.debug("Beginning toornament stalk for " + toornament_link)
     # open the websession
     driver = open_session()
     driver.get(toornament_link)
@@ -72,6 +73,8 @@ def stalk_team(url):
     :param url: Str, url to the main page of a team
     :return: (List[Str], Str), a tuple containing the list of player names and the team name
     """
+
+    logger.debug("Beginning toornament team stalk for " + url)
     edited_url = url + "info"
     page = requests.get(edited_url)
 
