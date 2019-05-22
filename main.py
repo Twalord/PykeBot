@@ -23,11 +23,8 @@ tests = {"config": False,
 
 # test config
 if tests.get("config"):
-    config.set_regions(["EUW"])
-    config.set_battlefy_time_frame("TODAY")
-    config.set_battlefy_url("https://battlefy.com/browse/league-of-legends?region=EU%20West&type=Any%20Format", "EUW")
+    config.set_region(["EUW"])
     config.set_timezone("CET")
-    config.set_websites(["ESL", "CHALLENGERMODE", "BATTLEFY"])
 
 
 # test toornament_stalker

@@ -9,23 +9,14 @@ def test_config():
     import os
     os.chdir("..")
     from utils import scrap_config as config
-    regions = ["EUW"]
-    battlefy_time_frame = "TODAY"
-    battlefy_url = ("https://battlefy.com/browse/league-of-legends?region=EU%20West&type=Any%20Format", "EUW")
+    region = "EUW"
     timezone = "CET"
-    websites = ["ESL", "CHALLENGERMODE", "BATTLEFY"]
 
-    config.set_regions(regions)
-    config.set_battlefy_time_frame(battlefy_time_frame)
-    config.set_battlefy_url(*battlefy_url)
+    config.set_region(region)
     config.set_timezone(timezone)
-    config.set_websites(websites)
 
-    assert config.get_regions() == regions
-    assert config.get_battlefy_time_frame() == battlefy_time_frame
-    assert config.get_battlefy_url(battlefy_url[1]) == battlefy_url[0]
+    assert config.get_region() == region
     assert config.get_timezone() == timezone
-    assert config.get_websites() == websites
 
 
 def test_toornaments_stalker():

@@ -122,24 +122,14 @@ def blank_getter(section, option):
 
 
 @try_config()
-def get_regions():
+def get_region():
     """
     Returns a list of all regions selected.
-    :return: List[String], containing the regions
+    :return: String, contains the current region
     """
 
     # returns the list of regions
-    return config["GENERAL"]["REGIONS"].split(",")
-
-
-@try_config()
-def get_websites():
-    """
-    Retunrs a list of all websites selected.
-    :return: List[String], containing the websites
-    """
-
-    return config["GENERAL"]["WEBSITES"].split(",")
+    return config["GENERAL"]["REGION"]
 
 
 @try_config()
@@ -150,27 +140,6 @@ def get_timezone():
     """
 
     return config["GENERAL"]["TIMEZONE"]
-
-
-@try_config()
-def get_battlefy_url(region):
-    """
-    Returns the battlefy url for the given region.
-    :param region: String, must be a valid region from the config
-    :return: String, the url set in the config for the given region
-    """
-
-    return config["BATTLEFY"][str(region + "_URL")]
-
-
-@try_config()
-def get_battlefy_time_frame():
-    """
-    Returns the time frame selected in the config.
-    :return: String, possible time frames are "TODAY", "THIS_WEEK", "THIS_WEEKEND"
-    """
-
-    return config["BATTLEFY"]["TIME_FRAME"]
 
 
 @update_config
@@ -190,43 +159,19 @@ def blank_setter(section, option, value):
 
 @update_config
 @try_config(is_getter=False)
-def set_regions(regions):
+def set_region(region):
     """
     Set regions to a given list of regions, for example "EUW"
-    :param regions: List[String], a list of regions
+    :param region: String, the abbreviation of the selected Region
     :return: None, but config is updated
     """
 
-    if isinstance(regions, (list, )):
-        region_string = ""
-        for item in regions:
-            region_string += item + ","
-        region_string = region_string[:-1]
-        config.set("GENERAL", "REGIONS", region_string)
+    if isinstance(region, str):
+        config.set("GENERAL", "REGIONS", region)
     else:
         logger.error("Can't change regions config, given value has the wrong type")
-        logger.debug("given type: " + str(type(regions)) + " required: 'list'")
-    return get_regions()
-
-
-@update_config
-@try_config(is_getter=False)
-def set_websites(websites):
-    """
-    Set websites to a given list of websites, for example "Battlefy"
-    :param websites: List[String], a list of websites
-    :return: None, but config is updated
-    """
-
-    if isinstance(websites, (list, )):
-        websites_string = ""
-        for item in websites:
-            websites_string += item + ","
-        websites_string = websites_string[:-1]
-        config.set("GENERAL", "WEBSITES", websites_string)
-    else:
-        logger.error("Can't change websites config, given value has the wrong type")
-        logger.debug("given type: " + str(type(websites)) + " required: 'list'")
+        logger.debug("given type: " + str(type(region)) + " required: 'str'")
+    return get_region()
 
 
 @update_config
@@ -247,42 +192,3 @@ def set_timezone(timezone):
     else:
         logger.error("Can't change timezone config, given value has the wrong type")
         logger.debug("given type: " + str(type(timezone)) + " required: 'str'")
-
-
-@update_config
-@try_config(is_getter=False)
-def set_battlefy_url(url, region):
-    """
-    Set the battlefy url to a given string for a given region
-    :param url: String, should be a valid url for the battlefy search page
-    :param region: String, should be a valid region from the regions config
-    :return: None, but config is updated
-    """
-
-    if isinstance(url, (str, )) and isinstance(region, (str, )):
-        if not config.has_option("BATTLEFY", str(region + "_URL")):
-            logger.debug("adding option [BATTLEFY][" + str(region + "_URL") + "]")
-        config.set("BATTLEFY", str(region + "_URL"), url)
-    else:
-        logger.error("Can't change battlefy url config, given value has the wrong type")
-        logger.debug("given type: " + str(type(url)) + " " + str(type(region)) + " required: 'str' 'str'")
-
-
-@update_config
-@try_config(is_getter=False)
-def set_battlefy_time_frame(frame):
-    """
-    Set the battlefy time frame to be used.
-    :param frame: String, must be "TODAY", "THIS_WEEK" or "THIS_WEEKEND"
-    :return: None, but config is updated
-    """
-
-    if isinstance(frame, (str, )):
-        possible_frames = ["TODAY", "THIS_WEEK", "THIS_WEEKEND"]
-        if frame in possible_frames:
-            config.set("BATTLEFY", "TIME_FRAME", frame)
-        else:
-            logger.error("Can't change battlefy time frame, given value " + frame + " is not in " + str(possible_frames))
-    else:
-        logger.error("Can't change battlefy time frame config, given value has the wrong type")
-        logger.debug("given type: " + str(type(frame)) + " required: 'list'")

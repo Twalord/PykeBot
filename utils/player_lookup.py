@@ -9,6 +9,7 @@ import bs4
 from models import Player, Team, TeamList, Rank, TeamListList
 from utils import task_queue
 import requests
+from utils import scrap_config as config
 
 from utils.lookup_tables import rank_lookup, rating_lookup
 
@@ -115,7 +116,8 @@ def stalk_player_lolprofile(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
-    base_url = "https://lolprofile.net/summoner/euw/"
+    region = config.get_region()
+    base_url = f"https://lolprofile.net/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "%20")
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, features="html.parser")
@@ -132,7 +134,8 @@ def stalk_player_opgg(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
-    base_url = "https://euw.op.gg/summoner/userName="
+    region = config.get_region()
+    base_url = f"https://{region}.op.gg/summoner/userName="
     url = base_url + sum_name.replace(" ", "+")
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, features="html.parser")
@@ -149,7 +152,8 @@ def stalk_player_mobalytics(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
-    base_url = "https://lol.mobalytics.gg/summoner/euw/"
+    region = config.get_region()
+    base_url = f"https://lol.mobalytics.gg/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "%20")
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, features="html.parser")
@@ -166,7 +170,8 @@ def stalk_player_leagueofgraphs(sum_name):
     :param sum_name: Str, the summoner name of a league game account
     :return: Str, string version of the ranking
     """
-    base_url = "https://www.leagueofgraphs.com/summoner/euw/"
+    region = config.get_region()
+    base_url = f"https://www.leagueofgraphs.com/summoner/{region}/"
     url = base_url + sum_name.replace(" ", "+")
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, features="html.parser")
