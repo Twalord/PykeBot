@@ -1,9 +1,8 @@
 # League Tournament Stalker
-
 <table>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/Twalord/League_Tournament_Stalker.svg?branch=master'></td>
+        <td>[![Build Status](https://travis-ci.org/Twalord/League_Tournament_Stalker.png?branch=master)](https://travis-ci.org/Twalord/League_Tournament_Stalker)</td>
         <td>Coverage</td>
         <td><img src='https://codecov.io/gh/Twalord/League_Tournament_Stalker/branch/master/graph/badge.svg'></td>
     </tr>
