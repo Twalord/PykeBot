@@ -49,7 +49,7 @@ def load_token():
     else:
         logger.error("No Token found.")
         raise NoTokenFoundError
-    return token
+    return token.strip()
 
 
 def run_bot():
