@@ -4,9 +4,7 @@ Handles interpreting commands and calling the respective stalker
 :author: Jonathan Decker
 """
 import logging
-from challengermode import challengermode_stalker
-from toornament import toornament_stalker
-from sinn_league import sinn_league_stalker
+from stalker import challengermode_stalker, sinn_league_stalker, toornament_stalker
 from utils import task_queue, player_lookup
 from models import Team, TeamList, TeamListList
 
@@ -49,7 +47,10 @@ def call_stalk_master(url, extendend=False) -> str:
         elif isinstance(results, Team):
             player_lookup.add_team_ranks(results)
 
-        out = results.extended_str()
+        if isinstance(results, str):
+            out = results
+        else:
+            out = results.extended_str()
 
     else:
         out = str(results)

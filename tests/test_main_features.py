@@ -20,7 +20,7 @@ def test_config():
 
 
 def test_toornaments_stalker():
-    from toornament.toornament_stalker import stalk
+    from stalker.toornament_stalker import stalk
     from utils import player_lookup
     from models import TeamList
 
@@ -38,8 +38,7 @@ def test_toornaments_stalker():
 
 
 def test_challengermode_stalker():
-    from challengermode.challengermode_stalker import stalk as stalk_challengermode
-    from models import TeamList
+    pass
 
     # this feature is not ready yet
 
@@ -51,7 +50,7 @@ def test_challengermode_stalker():
 
 
 def test_sinn_league_stalker():
-    from sinn_league import sinn_league_stalker
+    from stalker import sinn_league_stalker
     from models import TeamList
     url = "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3"
     team_lists = sinn_league_stalker.stalk(url)
@@ -63,7 +62,7 @@ def test_sinn_league_stalker():
 
 
 def test_challengermode_quick_stalker():
-    from challengermode.challengermode_stalker import quick_stalk
+    from stalker.challengermode_stalker import quick_stalk
     from models import TeamList
     team_list = quick_stalk("https://www.challengermode.com/Challenges/View/672fa046-3b77-e911-abc4-0003ffde309b")
 
