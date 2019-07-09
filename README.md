@@ -21,6 +21,8 @@ for windows user simply place the geckodriver.exe in the same folder as this pro
 Firefox needs to be installed in order for this to work.
 
 The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
+A tutorial on how to create a Discord Bot and token can be found here:
+https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
 
 ## Usage
 
