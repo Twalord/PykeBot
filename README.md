@@ -5,13 +5,14 @@
 [![codecov](https://codecov.io/gh/Twalord/League_Tournament_Stalker/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/League_Tournament_Stalker)
 
 This bot collects League of Legends summoner names for the participants of tournaments.
-Given a link the bot will find all players in the tournament and build op.gg multilinks for them,
-further the bot can go on op.gg and add soloQ rankings to each team and player.
+Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
+Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
 For now the bot supports SINN League, Toornament and Challengermode.
 
 ## Installation
 
+The bot requires Python Version 3.7 or newer.
 The required libraries can be installed via pip.
 Simply run pip install -r requirements.txt in the project folder.
 
@@ -19,7 +20,7 @@ The geckodriver can be found here https://github.com/mozilla/geckodriver/release
 for windows user simply place the geckodriver.exe in the same folder as this project.
 Firefox needs to be installed in order for this to work.
 
-The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in project folder.
+The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
 
 ## Usage
 
@@ -43,7 +44,7 @@ The following links can be stalked:
 Toornament Tournaments
 
 (Challengermode Matches)
-    Challengermode changed their website and the stalker hasn't been updated
+    Challengermode changed their website and the stalker hasn't been updated yet.
 
 Summoners INN League Seasons
 
