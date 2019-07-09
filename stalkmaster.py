@@ -110,7 +110,7 @@ def url_matcher(url):
 
     logger.debug(url + " has been detected as " + website + " and " + website_type)
 
-    stalker_lookup = {"challengermode": {"match": feature_not_available_right_now.quick_stalk,
+    stalker_lookup = {"challengermode": {"match": feature_not_available_right_now,
                                          "tournament": feature_not_implemented_yet},
                       "toornament": {"tournament": toornament_stalker.stalk},
                       "summoners-inn": {"season": sinn_league_stalker.stalk,
