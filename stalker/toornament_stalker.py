@@ -37,6 +37,18 @@ def stalk(toornament_link):
     toornament_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
     team_container = toornament_soup.find_all('div', class_="size-1-of-4")
 
+    # multiple team page test
+    driver.get(str(driver.current_url) +"?page=1")
+    count = 1
+    while True:
+        count += 1
+        driver.get(str(driver.current_url)[:-1] + str(count))
+        toornament_soup2 = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+        if len(toornament_soup2.find_all('div', class_="size-1-of-4")) > 0:
+            team_container.extend(toornament_soup2.find_all('div', class_="size-1-of-4"))
+        else:
+            break
+
     quit_session(driver)
 
     # extract toornament name
