@@ -1,3 +1,7 @@
+"""
+Handles Challangermode stalking
+:author: Jonathan Decker
+"""
 from utils.webmanager import open_session, quit_session
 import logging
 import time
@@ -6,6 +10,9 @@ from models import Player, Team, TeamList
 
 logger = logging.getLogger('scrap_logger')
 
+"""
+Challengermode stalker needs to be updated to match redesigned website 
+"""
 
 def stalk(url: str):
 

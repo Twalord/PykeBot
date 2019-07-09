@@ -40,7 +40,10 @@ Available commands are:
 
 The following links can be stalked:
 
-Challengermode Matches
+Toornament Tournaments
+
+(Challengermode Matches)
+    Challengermode changed their website and the stalker hasn't been updated
 
 Summoners INN League Seasons
 
@@ -48,9 +51,8 @@ Summoners INN League Groups
 
 Summoners INN League Teams
 
-Toornament Tournaments
-
 ## TODO
 
+- update challengermode stalker
 - finish challengermode tournament stalker
 - add support for esl page stalking

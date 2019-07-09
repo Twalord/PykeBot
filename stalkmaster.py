@@ -23,6 +23,10 @@ def feature_not_implemented_yet(*args):
     return "This feature is not ready yet."
 
 
+def feature_not_available_right_now(*args):
+    return "This feature is not available in the current version"
+
+
 def call_stalk_master(url, extendend=False) -> str:
     # call url matcher to find out which stalker to use
     try:
@@ -106,7 +110,7 @@ def url_matcher(url):
 
     logger.debug(url + " has been detected as " + website + " and " + website_type)
 
-    stalker_lookup = {"challengermode": {"match": challengermode_stalker.quick_stalk,
+    stalker_lookup = {"challengermode": {"match": feature_not_available_right_now.quick_stalk,
                                          "tournament": feature_not_implemented_yet},
                       "toornament": {"tournament": toornament_stalker.stalk},
                       "summoners-inn": {"season": sinn_league_stalker.stalk,
