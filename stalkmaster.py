@@ -4,7 +4,7 @@ Handles interpreting commands and calling the respective stalker
 :author: Jonathan Decker
 """
 import logging
-from stalker import challengermode_stalker, sinn_league_stalker, toornament_stalker
+from stalker import toornament_stalker
 from utils import task_queue, player_lookup
 from models import Team, TeamList, TeamListList
 
@@ -25,6 +25,10 @@ def feature_not_implemented_yet(*args):
 
 def feature_not_available_right_now(*args):
     return "This feature is not available in the current version"
+
+
+def feature_not_available_in_no_selenium(*args):
+    return "This feature is not available in the no selenium version"
 
 
 def call_stalk_master(url, extendend=False) -> str:
@@ -110,12 +114,12 @@ def url_matcher(url):
 
     logger.debug(url + " has been detected as " + website + " and " + website_type)
 
-    stalker_lookup = {"challengermode": {"match": feature_not_available_right_now,
-                                         "tournament": feature_not_implemented_yet},
+    stalker_lookup = {"challengermode": {"match": feature_not_available_in_no_selenium,
+                                         "tournament": feature_not_available_in_no_selenium},
                       "toornament": {"tournament": toornament_stalker.stalk},
-                      "summoners-inn": {"season": sinn_league_stalker.stalk,
-                                        "group": sinn_league_stalker.stalk_group,
-                                        "team": sinn_league_stalker.stalk_team}}
+                      "summoners-inn": {"season": feature_not_available_in_no_selenium,
+                                        "group": feature_not_available_in_no_selenium,
+                                        "team": feature_not_available_in_no_selenium}}
 
     stalker = stalker_lookup.get(website).get(website_type)
     return stalker

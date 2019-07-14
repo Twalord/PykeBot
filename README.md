@@ -1,4 +1,4 @@
-# League Tournament Stalker
+# League Tournament Stalker NO SELENIUM
 
 [![Build Status](https://travis-ci.com/Twalord/League_Tournament_Stalker.svg?branch=master)](https://travis-ci.com/Twalord/League_Tournament_Stalker)
 
@@ -8,17 +8,13 @@ This bot collects League of Legends summoner names for the participants of tourn
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
-For now the bot supports SINN League, Toornament and Challengermode.
+This version of the bot only supports Toornament and rank lookups but does not require selenium
 
 ## Installation
 
 The bot requires Python Version 3.7 or newer.
 The required libraries can be installed via pip.
 Simply run pip install -r requirements.txt in the project folder.
-
-The geckodriver can be found here https://github.com/mozilla/geckodriver/releases
-for windows user simply place the geckodriver.exe in the same folder as this project.
-Firefox needs to be installed in order for this to work.
 
 The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
 A tutorial on how to create a Discord Bot and token can be found here:
@@ -45,17 +41,3 @@ The following links can be stalked:
 
 Toornament Tournaments
 
-(Challengermode Matches)
-    Challengermode changed their website and the stalker hasn't been updated yet.
-
-Summoners INN League Seasons
-
-Summoners INN League Groups
-
-Summoners INN League Teams
-
-## TODO
-
-- update challengermode stalker
-- finish challengermode tournament stalker
-- add support for esl page stalking

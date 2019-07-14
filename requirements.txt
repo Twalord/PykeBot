@@ -4,7 +4,6 @@ certifi==2018.11.29
 chardet==3.0.4
 idna==2.8
 pytz==2018.9
-requests==2.21.0
-selenium==3.141.0
+requests==2.22.0
 soupsieve==1.7.3
 urllib3==1.25.3
