@@ -42,10 +42,13 @@ def load_token():
     :return: String, the Bot Token
     """
     logger.info("Trying to load Bot token")
-    f = open("TOKEN", "r")
     token = ""
-    token = f.readline()
-    f.close()
+    try:
+        f = open("TOKEN", "r")
+        token = f.readline()
+        f.close()
+    except FileNotFoundError:
+        pass
     if len(token) > 0:
         logger.info("Loaded Token.")
     else:
