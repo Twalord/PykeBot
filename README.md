@@ -27,15 +27,6 @@ In order to do so you need accounts on heroku, github and discord.
 9. Press on edit for it and switch it to on.
 10. Done, the bot should now appear as online and react to commands in its dedicated channel.
 
-
-The bot requires Python Version 3.7 or newer.
-The required libraries can be installed via pip.
-Simply run pip install -r requirements.txt in the project folder.
-
-The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
-A tutorial on how to create a Discord Bot and token can be found here:
-https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
-
 ## Usage
 
 Running main.py will start the Discord Bot which will await commands.
