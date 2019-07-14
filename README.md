@@ -12,6 +12,22 @@ This version of the bot only supports Toornament and rank lookups but does not r
 
 ## Installation
 
+This version is designed to be hosted on https://www.heroku.com/.
+In order to do so you need accounts on heroku, github and discord.
+
+1. Fork this project to your github account.
+2. Go on your heroku account and create a new app.
+3. Select Deploy and connect your github account.
+4. Select the forked project with the no_selenium branch and deploy.
+5. Create a discord bot and add it to your server, also keep the token. 
+    Instructions for this step can be found here: https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
+6. On heroku go to settings and reveal config vars.
+7. Add a new one with TOKEN as KEY and your discord bot token as VALUE.
+8. Select Resources, one process 'main' should be visible.
+9. Press on edit for it and switch it to on.
+10. Done, the bot should now appear as online and react to commands in its dedicated channel.
+
+
 The bot requires Python Version 3.7 or newer.
 The required libraries can be installed via pip.
 Simply run pip install -r requirements.txt in the project folder.
