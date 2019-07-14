@@ -9,6 +9,7 @@ Given a link the bot will find all players in the tournament and build op.gg mul
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
 This version of the bot only supports Toornament and rank lookups but does not require selenium
+and was designed to be hosted on https://www.heroku.com/.
 
 ## Installation
 
@@ -29,7 +30,6 @@ In order to do so you need accounts on heroku, github and discord.
 
 ## Usage
 
-Running main.py will start the Discord Bot which will await commands.
 Available commands are:
 
 !stalk url
