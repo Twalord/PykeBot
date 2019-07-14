@@ -10,6 +10,8 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from discord import Game
 from utils.status_list import get_status
+import os
+
 
 """
 Requirements were updated, this fix should not be necessary anymore.
@@ -47,8 +49,13 @@ def load_token():
     if len(token) > 0:
         logger.info("Loaded Token.")
     else:
-        logger.error("No Token found.")
-        raise NoTokenFoundError
+        logger.info("No Token file found.")
+        logger.info("Trying env variables.")
+        token = os.environ['TOKEN']
+        if len(token) > 0:
+            logger.info("Loaded Token.")
+        else:
+            raise NoTokenFoundError
     return token.strip()
 
 
