@@ -47,4 +47,6 @@ Available commands are:
 The following links can be stalked:
 
 Toornament Tournaments
-
+   
+The link must be to the main page of the toornament.
+Only when the url ends with '/information' is it correct.
