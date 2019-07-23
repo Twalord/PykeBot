@@ -32,11 +32,11 @@ In order to do so you need accounts on heroku, github and discord.
 
 Available commands are:
 
-!stalk url
+.lolstalk url
 
-!extstalk url
+.lolextstalk url
 
-!setregion region
+.lolsetregion region
 
 "stalk" will return team names and multilinks for teams in the given tournament or match.
 "extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
