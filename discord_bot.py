@@ -23,7 +23,7 @@ needs to be changed to ensure_future = getattr(asyncio, 'async')
 """
 
 logger = logging.getLogger('scrap_logger')
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix=".lol")
 
 
 class NoTokenFoundError(Exception):
