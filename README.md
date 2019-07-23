@@ -29,11 +29,11 @@ https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-
 Running main.py will start the Discord Bot which will await commands.
 Available commands are:
 
-.lolstalk url
+!stalk url
 
-.lolextstalk url
+!extstalk url
 
-.lolsetregion region
+!setregion region
 
 "stalk" will return team names and multilinks for teams in the given tournament or match.
 "extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
