@@ -1,18 +1,18 @@
-# League Tournament Stalker
+# PykeBot
 
 [![Build Status](https://travis-ci.com/Twalord/League_Tournament_Stalker.svg?branch=master)](https://travis-ci.com/Twalord/League_Tournament_Stalker)
 
 [![codecov](https://codecov.io/gh/Twalord/League_Tournament_Stalker/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/League_Tournament_Stalker)
 
-This bot collects League of Legends summoner names for the participants of tournaments.
+PykeBot is a Discord that collects League of Legends summoner names for the participants of tournaments.
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
-For now the bot supports SINN League, Toornament and Challengermode.
+For now PykeBot supports SINN League, Toornament and Challengermode.
 
 ## Installation
 
-The bot requires Python Version 3.7 or newer.
+PykeBot requires Python Version 3.7 or newer.
 The required libraries can be installed via pip.
 Simply run pip install -r requirements.txt in the project folder.
 
@@ -20,7 +20,7 @@ The geckodriver can be found here https://github.com/mozilla/geckodriver/release
 for windows user simply place the geckodriver.exe in the same folder as this project.
 Firefox needs to be installed in order for this to work.
 
-The bot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
+PykeBot also requires a valid Discord api token which needs to be placed in a file called TOKEN in the project folder.
 A tutorial on how to create a Discord Bot and token can be found here:
 https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
 
