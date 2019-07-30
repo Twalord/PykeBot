@@ -1,3 +1,8 @@
+"""
+🦆
+:author: Jonathan Decker
+"""
+"""
 import random
 
 bots = "Alistar,Amumu,Annie,Ashe,Blitzcrank,Brand,Caitlyn,Cassiopeia,Cho\'Gath,Darius,Dr. Mundo,Ezreal,Fiddlesticks," \
@@ -10,8 +15,11 @@ bots = "Alistar,Amumu,Annie,Ashe,Blitzcrank,Brand,Caitlyn,Cassiopeia,Cho\'Gath,D
 def get_random_bot():
     return random.choice(bots)
 
+"""
+
 
 def get_status():
-    bot = get_random_bot()
-    status = "as " + bot + " Bot"
+    # bot = get_random_bot()
+    # status = "as " + bot + " Bot"
+    status = ".lolstalk <url>"
     return status

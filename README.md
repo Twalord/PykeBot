@@ -1,14 +1,14 @@
-# League Tournament Stalker NO SELENIUM
+# PykeBot NO SELENIUM
 
 [![Build Status](https://travis-ci.com/Twalord/League_Tournament_Stalker.svg?branch=master)](https://travis-ci.com/Twalord/League_Tournament_Stalker)
 
 [![codecov](https://codecov.io/gh/Twalord/League_Tournament_Stalker/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/League_Tournament_Stalker)
 
-This bot collects League of Legends summoner names for the participants of tournaments.
+PykeBot is a Discord bot that collects League of Legends summoner names for the participants of tournaments.
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
-This version of the bot only supports Toornament and rank lookups but does not require selenium
+This version of PykeBot only supports Toornament and rank lookups but does not require selenium
 and was designed to be hosted on https://www.heroku.com/.
 
 ## Installation
