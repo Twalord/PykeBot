@@ -10,6 +10,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from discord import Game
 from utils.status_list import get_status
+import os
 
 """
 Requirements were updated, this fix should not be necessary anymore.
@@ -23,7 +24,7 @@ needs to be changed to ensure_future = getattr(asyncio, 'async')
 """
 
 logger = logging.getLogger('scrap_logger')
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix=".lol")
 
 
 class NoTokenFoundError(Exception):
@@ -40,15 +41,23 @@ def load_token():
     :return: String, the Bot Token
     """
     logger.info("Trying to load Bot token")
-    f = open("TOKEN", "r")
     token = ""
-    token = f.readline()
-    f.close()
+    try:
+        f = open("TOKEN", "r")
+        token = f.readline()
+        f.close()
+    except FileNotFoundError:
+        pass
     if len(token) > 0:
         logger.info("Loaded Token.")
     else:
-        logger.error("No Token found.")
-        raise NoTokenFoundError
+        logger.info("No Token file found.")
+        logger.info("Trying env variables.")
+        token = os.environ['TOKEN']
+        if len(token) > 0:
+            logger.info("Loaded Token.")
+        else:
+            raise NoTokenFoundError
     return token.strip()
 
 
@@ -68,11 +77,22 @@ def run_bot():
 def chunk_message(out_raw):
     """
     Messages in Discord are limited to 2000 characters so any bigger output needs to be chunked
+    while respecting line breaks in the message
     :param out_raw: String, the message that needs to be chunked
-    :return: List[String], a list of Strings each with a length of 2000 characters
+    :return: List[String], a list of Strings each with a length of up to 2000 characters
     """
     chunk_size = 2000
-    out_list = [out_raw[i:i + chunk_size] for i in range(0, len(out_raw), chunk_size)]
+    # out_list = [out_raw[i:i + chunk_size] for i in range(0, len(out_raw), chunk_size)]
+    out_split = out_raw.split("\n")
+    out_list = []
+    message = ""
+    for split in out_split:
+        if len(message + split) > chunk_size:
+            out_list.append(message)
+            message = ""
+        message += "\n" + split
+    out_list.append(message)
+
     return out_list
 
 
@@ -115,7 +135,7 @@ async def stalk(ctx, *args):
     loop = asyncio.get_event_loop()
     arg_list = list(args)
     if not len(arg_list) == 1:
-        await ctx.send("Usage is !stalk url")
+        await ctx.send("Usage is .lolstalk url")
         return
 
     def sub_proc():
@@ -141,7 +161,7 @@ async def ext_stalk(ctx, *args):
     loop = asyncio.get_event_loop()
     arg_list = list(args)
     if not len(arg_list) == 1:
-        await ctx.send("Usage is !stalk url")
+        await ctx.send("Usage is .lolextstalk url")
         return
 
     def sub_proc():
@@ -178,4 +198,4 @@ async def update_region(ctx, *args):
         new_region = config.get_region()
         await ctx.send(f"Region setting has been changed to {new_region}")
     else:
-        await ctx.send("Usage is !setregion region")
+        await ctx.send("Usage is .lolsetregion region")

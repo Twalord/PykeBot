@@ -4,8 +4,6 @@ Handles scraping of the toornament page.
 """
 import logging
 import bs4
-import time
-from utils.webmanager import open_session, quit_session
 from models import Team, TeamList, Player
 import requests
 from utils.task_queue import TaskGroup, SingleTask, submit_task_group
@@ -22,34 +20,31 @@ def stalk(toornament_link):
     """
 
     logger.debug("Beginning toornament stalk for " + toornament_link)
-    # open the websession
-    driver = open_session()
-    driver.get(toornament_link)
-
-    # find the participants button and press it
-    participants_button = driver.find_element_by_xpath("//*[@id=\"tournament-nav\"]/div/section/div/ul/li[2]/a")
-    participants_button.click()
-    time.sleep(2)
+    # edit the link
+    toornament_link_list = toornament_link.split("/")[:-1]
+    toornament_link_list.append("participants")
+    edited_toornament_link = "/".join(toornament_link_list)
 
     # find all teams and save the links
     participants_links = []
     base_url = "https://www.toornament.com"
-    toornament_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+    page = requests.get(edited_toornament_link)
+    toornament_soup = bs4.BeautifulSoup(page.text, features="html.parser")
     team_container = toornament_soup.find_all('div', class_="size-1-of-4")
 
     # multiple team page test
-    driver.get(str(driver.current_url) +"?page=1")
+    multipage_toornament = edited_toornament_link +"?page=1"
     count = 1
     while True:
         count += 1
-        driver.get(str(driver.current_url)[:-1] + str(count))
-        toornament_soup2 = bs4.BeautifulSoup(driver.page_source, features="html.parser")
+        #driver.get(str(driver.current_url)[:-1] + str(count))
+        multipage_toornament = multipage_toornament[:-1] + str(count)
+        page = requests.get(multipage_toornament)
+        toornament_soup2 = bs4.BeautifulSoup(page.text, features="html.parser")
         if len(toornament_soup2.find_all('div', class_="size-1-of-4")) > 0:
             team_container.extend(toornament_soup2.find_all('div', class_="size-1-of-4"))
         else:
             break
-
-    quit_session(driver)
 
     # extract toornament name
     tournament_name = toornament_soup.select("#main-container > div.layout-section.header > div > section > div > div.information > div.name > h1")[0].text

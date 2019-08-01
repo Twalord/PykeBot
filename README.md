@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/Twalord/PykeBot.svg?branch=master)](https://travis-ci.com/Twalord/PykeBot)
 [![codecov](https://codecov.io/gh/Twalord/PykeBot/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/PykeBot)
 
-PykeBot is a Discord that collects League of Legends summoner names for the participants of tournaments.
+PykeBot is a Discord bot that collects League of Legends summoner names for the participants of tournaments.
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
@@ -28,11 +28,11 @@ https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-
 Running main.py will start the Discord Bot which will await commands.
 Available commands are:
 
-!stalk url
+.lolstalk url
 
-!extstalk url
+.lolextstalk url
 
-!setregion region
+.lolsetregion region
 
 "stalk" will return team names and multilinks for teams in the given tournament or match.
 "extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
