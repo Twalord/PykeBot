@@ -51,7 +51,7 @@ class Player:
         if Rank is None:
             return self.summoner_name
         else:
-            return self.summoner_name + " " + str(self.rank)
+            return f"{self.summoner_name} *{str(self.rank)}*"
 
 
 @dataclass
@@ -83,9 +83,9 @@ class Team:
 
     def __str__(self):
         if self.average_rank is None:
-            return self.name + " | " + self.multi_link
+            return f"__{self.name}__ | {self.multi_link}"
         else:
-            return self.name + " Ø: " + str(self.average_rank) + " max: " + str(self.max_rank) + " | " + self.multi_link
+            return f"__{self.name}__ Ø: {str(self.average_rank)} max: {str(self.max_rank)} | {self.multi_link}"
 
     def extended_str(self):
         out = str(self) + "\n"
@@ -103,13 +103,13 @@ class TeamList:
     teams: List[Team]
 
     def __str__(self):
-        out = self.name + "\n"
+        out = f"__**{self.name}**__ \n"
         for team in self.teams:
             out += str(team) + "\n"
         return out
 
     def extended_str(self):
-        out = self.name + "\n"
+        out = f"__**{self.name}**__ \n"
         for team in self.teams:
             out += team.extended_str() + "\n"
         return out
