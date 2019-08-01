@@ -1,8 +1,7 @@
 # PykeBot
 
-[![Build Status](https://travis-ci.com/Twalord/League_Tournament_Stalker.svg?branch=master)](https://travis-ci.com/Twalord/League_Tournament_Stalker)
-
-[![codecov](https://codecov.io/gh/Twalord/League_Tournament_Stalker/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/League_Tournament_Stalker)
+[![Build Status](https://travis-ci.com/Twalord/PykeBot.svg?branch=master)](https://travis-ci.com/Twalord/PykeBot)
+[![codecov](https://codecov.io/gh/Twalord/PykeBot/branch/master/graph/badge.svg)](https://codecov.io/gh/Twalord/PykeBot)
 
 PykeBot is a Discord that collects League of Legends summoner names for the participants of tournaments.
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
