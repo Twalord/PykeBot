@@ -60,3 +60,8 @@ Summoners INN League Teams
 - update challengermode stalker
 - finish challengermode tournament stalker
 - add support for esl page stalking
+
+
+## Credit
+The PykeBot Icon was designed by the talented Binidi:
+https://www.deviantart.com/binidi/art/Pyke-Icon-808245658
