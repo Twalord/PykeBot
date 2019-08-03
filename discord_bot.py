@@ -5,12 +5,14 @@ Provides commands for the Discord Bot API. 🦆
 from utils import scrap_config as config
 import logging
 from discord.ext import commands
+from discord.ext import tasks
 from stalkmaster import call_stalk_master
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from discord import Game
 from utils.status_list import get_status
 import os
+import pathlib
 
 
 """
@@ -24,8 +26,159 @@ in lib\site-packages\aiohttp\helpers.py line 25
 needs to be changed to ensure_future = getattr(asyncio, 'async')
 """
 
+
+class UsageReporter(commands.Cog):
+    """
+    provides recoding of bot usage, written to a txt file
+    """
+
+    def __init__(self, client):
+        """
+        Initiates the stats.txt file and starts the loop.
+        :param bot: The Bot instance used for the Discord Bot.
+        """
+        self.bot = client
+
+        self.path_to_stats = pathlib.Path.cwd() / "stats.txt"
+
+        # checks if a file called stats.txt exists and if not creates it
+        if not (self.path_to_stats.exists() and self.path_to_stats.is_file()):
+            logger.info("Stats file not found, recreating.")
+            f = open(str(self.path_to_stats), "w+")
+            f.close()
+        else:
+            logger.info("Stats file found.")
+
+        # adds these lines if they don't already exist
+        s = open(str(self.path_to_stats)).read()
+        if "server_count:" not in s:
+            s += "\nserver_count:"
+        if "server_names:" not in s:
+            s += "\nserver_names:"
+        if "stalk_call_count:" not in s:
+            s += "\nstalk_call_count:"
+        if "ext_call_count:" not in s:
+            s += "\next_call_count:"
+
+        f = open(str(self.path_to_stats), "w")
+        f.write(s)
+        f.close()
+
+    def count_up(self, counter_name):
+        """
+        Opens the stats.txt file and counts the given counter up by one
+        :param counter_name: str, must match one of the counter names in stats.txt
+        :return: None
+        """
+        s = open(str(self.path_to_stats)).read()
+        s_list = s.split("\n")
+        for index, item in enumerate(s_list):
+            if counter_name in item:
+                only_counter_name, count = item.split(" ")
+                count = str(int(count) + 1)
+                s_list[index] = f"{only_counter_name} {count}"
+
+        s_out = "\n".join(s_list)
+        f = open(str(self.path_to_stats), "w")
+        f.write(s_out)
+        f.close()
+
+    def cog_unload(self):
+        self.upload.cancel()
+
+    async def start(self):
+        """
+        initiates the stats and starts the loop
+        :return: None
+        """
+        await self.bot.wait_until_ready()
+        self.update_server_stats()
+
+        self.upload.start()
+
+    def update_server_stats(self):
+        s = open(str(self.path_to_stats)).read()
+        server_list = []
+        for server in self.bot.guilds:
+            server_list.append(server.name)
+        server_list_string = ', '.join(server_list)
+        s_list = s.split("\n")
+        remove_in = []
+        for index, item in enumerate(s_list):
+            if "server_names:" in item:
+                s_list[index] = "server_names: " + server_list_string
+            if "server_count:" in item:
+                s_list[index] = "server_count: " + str(len(server_list))
+            if "stalk_call_count:" in item:
+                s_list[index] = "stalk_call_count: 0"
+            if "ext_call_count:" in item:
+                s_list[index] = "ext_call_count: 0"
+            if len(item) == 0:
+                remove_in.append(index)
+
+        for index in remove_in:
+            s_list.remove(s_list[index])
+
+        s_out = "\n".join(s_list)
+        f = open(str(self.path_to_stats), "w")
+        f.write(s_out)
+        f.close()
+
+    @tasks.loop(hours=24.0)
+    async def upload(self):
+        pass
+        # refresh server_names and server_count and add it to the file
+        self.update_server_stats()
+
+        # mail address is saved via env var or file
+        logger.info("Trying to load stats mail info")
+        address = ""
+        pw = ""
+        try:
+            f = open("MAIL", "r")
+            address = f.readline()
+            pw = f.readline()
+            f.close()
+        except FileNotFoundError:
+            pass
+        if len(address) > 0 and len(pw) > 0:
+            logger.info("Loaded Mail info.")
+        else:
+            logger.info("No Mail file found.")
+            logger.info("Trying env variables.")
+            address = os.environ['MAIL_ADD']
+            pw = os.environ['MAIL_PW']
+            if len(address) > 0 and len(pw) > 0:
+                logger.info("Loaded Mail Info.")
+            else:
+                bot.bg_task.cog_unload()
+                raise NoMailInfoFoundError
+
+        address = address.strip()
+        pw = pw.strip()
+
+        # send the file per email to me
+
+
+
+
+    @upload.after_loop
+    async def on_cancel(self):
+        if self.upload.is_being_cancelled():
+            await self.upload()
+
+
+class MyBot(commands.Bot):
+    """
+    the UsageReporter needs to be saves as part of the bot to access its functions from everywhere
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, command_prefix=".lol")
+        self.bg_task = UsageReporter(self)
+
+
 logger = logging.getLogger('scrap_logger')
-bot = commands.Bot(command_prefix=".lol")
+bot = MyBot()
 
 
 class NoTokenFoundError(Exception):
@@ -33,6 +186,14 @@ class NoTokenFoundError(Exception):
     Raised when no Discord Bot Token was found
     """
     logger.error("No Bot Token was found. The Discord Bot API Token needs to be placed in a file called TOKEN")
+
+
+class NoMailInfoFoundError(Exception):
+    """
+    Raised when no Mail info for the usage stats could be found.
+    """
+    logger.error("No Mail Info Found. To receive usage stats, add a file called MAIL"
+                 " with address in the first line and password in the second")
 
 
 def load_token():
@@ -108,6 +269,7 @@ async def on_ready():
     logger.info(bot.user.id)
     logger.info('------')
 
+    await bot.bg_task.start()
     await update_client_presence(get_status())
 
 
@@ -139,6 +301,8 @@ async def stalk(ctx, *args):
         await ctx.send("Usage is .lolstalk url")
         return
 
+    bot.bg_task.count_up("stalk_call_count:")
+
     def sub_proc():
         return call_stalk_master(arg_list[0])
 
@@ -164,6 +328,8 @@ async def ext_stalk(ctx, *args):
     if not len(arg_list) == 1:
         await ctx.send("Usage is .lolextstalk url")
         return
+
+    bot.bg_task.count_up("ext_call_count:")
 
     def sub_proc():
         return call_stalk_master(arg_list[0], extendend=True)
