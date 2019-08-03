@@ -51,3 +51,7 @@ Toornament Tournaments
    
 The link must be to the main page of the toornament.
 Only when the url ends with '/information' is it correct.
+
+## Credit
+The PykeBot Icon was designed by the talented Binidi:
+https://www.deviantart.com/binidi/art/Pyke-Icon-808245658
