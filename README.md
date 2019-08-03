@@ -1,5 +1,7 @@
 # PykeBot NO SELENIUM
 
+![alt text](./PykeIconResize.jpg)
+
 [![Build Status](https://travis-ci.com/Twalord/PykeBot.svg?branch=No_Selenium)](https://travis-ci.com/Twalord/PykeBot)
 [![codecov](https://codecov.io/gh/Twalord/PykeBot/branch/No_Selenium/graph/badge.svg)](https://codecov.io/gh/Twalord/PykeBot)
 
