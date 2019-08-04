@@ -155,6 +155,8 @@ class UsageReporter(commands.Cog):
                 logger.debug("Loaded Mail Info.")
             else:
                 bot.bg_task.cog_unload()
+                logger.error("No Mail Info Found. To receive usage stats, add a file called MAIL"
+                             " with address in the first line and password in the second")
                 raise NoMailInfoFoundError
 
         address = address.strip()
@@ -205,15 +207,12 @@ class NoTokenFoundError(Exception):
     """
     Raised when no Discord Bot Token was found
     """
-    logger.error("No Bot Token was found. The Discord Bot API Token needs to be placed in a file called TOKEN")
 
 
 class NoMailInfoFoundError(Exception):
     """
     Raised when no Mail info for the usage stats could be found.
     """
-    logger.error("No Mail Info Found. To receive usage stats, add a file called MAIL"
-                 " with address in the first line and password in the second")
 
 
 def load_token():
@@ -239,6 +238,7 @@ def load_token():
         if len(token) > 0:
             logger.info("Loaded Token.")
         else:
+            logger.error("No Bot Token was found. The Discord Bot API Token needs to be placed in a file called TOKEN")
             raise NoTokenFoundError
     return token.strip()
 
@@ -252,6 +252,7 @@ def run_bot():
     try:
         token = load_token()
     except NoTokenFoundError:
+        logger.error("No Bot Token was found. The Discord Bot API Token needs to be placed in a file called TOKEN")
         return
     bot.run(token)
 
