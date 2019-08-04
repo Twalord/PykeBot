@@ -13,7 +13,10 @@ from discord import Game
 from utils.status_list import get_status
 import os
 import pathlib
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import datetime
 
 """
 Requirements were updated, this fix should not be necessary anymore.
@@ -131,7 +134,7 @@ class UsageReporter(commands.Cog):
         self.update_server_stats()
 
         # mail address is saved via env var or file
-        logger.info("Trying to load stats mail info")
+        logger.debug("Trying to load stats mail info")
         address = ""
         pw = ""
         try:
@@ -142,14 +145,14 @@ class UsageReporter(commands.Cog):
         except FileNotFoundError:
             pass
         if len(address) > 0 and len(pw) > 0:
-            logger.info("Loaded Mail info.")
+            logger.debug("Loaded Mail info.")
         else:
-            logger.info("No Mail file found.")
-            logger.info("Trying env variables.")
+            logger.debug("No Mail file found.")
+            logger.debug("Trying env variables.")
             address = os.environ['MAIL_ADD']
             pw = os.environ['MAIL_PW']
             if len(address) > 0 and len(pw) > 0:
-                logger.info("Loaded Mail Info.")
+                logger.debug("Loaded Mail Info.")
             else:
                 bot.bg_task.cog_unload()
                 raise NoMailInfoFoundError
@@ -158,9 +161,26 @@ class UsageReporter(commands.Cog):
         pw = pw.strip()
 
         # send the file per email to me
+        content = open(str(self.path_to_stats)).read()
 
+        # TODO only works for outlook, should be able to adapt to others
+        mail_server = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
+        mail_server.starttls()
+        mail_server.login(address, pw)
 
+        msg = MIMEMultipart()
 
+        msg['From'] = address
+        msg['To'] = address
+        msg['Subject'] = f"Usage Report {str(datetime.datetime.now())}"
+
+        msg.attach(MIMEText(content, 'plain'))
+
+        logger.info(f"Sending usage report to {address}")
+        mail_server.send_message(msg)
+
+        del msg
+        mail_server.quit()
 
     @upload.after_loop
     async def on_cancel(self):
