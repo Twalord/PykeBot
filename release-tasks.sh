@@ -2,3 +2,4 @@ wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodrive
 mkdir geckodriver
 tar -xzf geckodriver-v0.24.0-linux64.tar.gz -C geckodriver
 export PATH=$PATH:$PWD/geckodriver
+echo "Finished Geckodriver Setup"
