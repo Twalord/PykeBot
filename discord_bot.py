@@ -41,7 +41,6 @@ class UsageReporter(commands.Cog):
         :param bot: The Bot instance used for the Discord Bot.
         """
         self.bot = client
-
         self.path_to_stats = pathlib.Path.cwd() / "stats.txt"
 
         # checks if a file called stats.txt exists and if not creates it
@@ -87,7 +86,7 @@ class UsageReporter(commands.Cog):
         f.close()
 
     def cog_unload(self):
-        self.upload.cancel()
+        self.run_loop.cancel()
 
     async def start(self):
         """
@@ -97,7 +96,7 @@ class UsageReporter(commands.Cog):
         await self.bot.wait_until_ready()
         self.update_server_stats()
 
-        self.upload.start()
+        self.run_loop.start()
 
     def update_server_stats(self):
         s = open(str(self.path_to_stats)).read()
@@ -128,8 +127,10 @@ class UsageReporter(commands.Cog):
         f.close()
 
     @tasks.loop(hours=24.0)
+    async def run_loop(self):
+        await self.upload()
+
     async def upload(self):
-        pass
         # refresh server_names and server_count and add it to the file
         self.update_server_stats()
 
@@ -184,9 +185,9 @@ class UsageReporter(commands.Cog):
         del msg
         mail_server.quit()
 
-    @upload.after_loop
+    @run_loop.after_loop
     async def on_cancel(self):
-        if self.upload.is_being_cancelled():
+        if self.run_loop.is_being_cancelled():
             await self.upload()
 
 
