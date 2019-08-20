@@ -10,9 +10,6 @@ from models import Player, Team, TeamList
 
 logger = logging.getLogger('scrap_logger')
 
-"""
-Challengermode stalker needs to be updated to match redesigned website 
-"""
 
 def stalk(url: str):
 
@@ -67,17 +64,15 @@ def quick_stalk(url):
     challenger_soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
     quit_session(driver)
 
-    team_containers = challenger_soup.find_all('div', class_="col-md-6")
-    title = challenger_soup.select("#arena-wrap > div.pos--rel.flx--1-1-auto.w--100 > div.m-b--base > div:nth-child(3) > div.pos--rel.z--999 > div.cm-arena-wrap.arena-padding-horizontal > div.ta--center.m-v--medium.p-t--base--sm.cm-text-shadow > div.h1.lh--title.ellipsis > div > a")[0].text
+    team_containers = challenger_soup.find_all('div', class_="col-6--sm")
+    title = challenger_soup.select("#arena-wrap > div > div > div.p-b--medium > div:nth-child(1) > div.pos--rel.z--99.cm-text-shadow > div > div.dis--flx.flx-dir--col.ali-ite--center > div.ta--center > div > span > span")[0].text
+    title = title.strip()
 
     teams = []
     for team_container in team_containers:
-        team_name_block = team_container.find('div', class_="dis--none dis--blk--sm m-b--minimum")
-        if team_name_block is None:
-            team_name_block = team_container.find('div', class_="dis--none dis--blk--sm m-b--minimum m-t--medium")
+        team_name_block = team_container.find('a', class_="link-white")
         team_name_raw = team_name_block.text
-        team_name_list = team_name_raw.split(" ")
-        team_name = "".join(team_name_list[:len(team_name_list)-25]).strip()
+        team_name = team_name_raw.strip()
 
         player_opggs_htmls = team_container.find_all('a', class_="link-white-dark")
         player_opggs = []
@@ -89,4 +84,4 @@ def quick_stalk(url):
             players.append(Player(sum_name.replace("+", " ")))
         teams.append(Team(team_name, players))
 
-    return TeamList(title.strip(), teams)
+    return TeamList(title, teams)
