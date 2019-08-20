@@ -14,7 +14,8 @@ logger = logging.getLogger('scrap_logger')
 def stalk(url: str):
 
     # edit url
-    url = url.replace("Show", "Participants")
+    url = url.lower()
+    url = url.replace("/show/", "/participants/")
 
     # open a websession
     driver = open_session(headless=True)

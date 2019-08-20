@@ -46,8 +46,7 @@ The following links can be stalked:
 
 Toornament Tournaments
 
-(Challengermode Matches)
-    Challengermode changed their website and the stalker hasn't been updated yet.
+Challengermode Matches
 
 Summoners INN League Seasons
 
@@ -57,10 +56,8 @@ Summoners INN League Teams
 
 ## TODO
 
-- update challengermode stalker
 - finish challengermode tournament stalker
 - add support for esl page stalking
-
 
 ## Credit
 The PykeBot Icon was designed by the talented Binidi:
