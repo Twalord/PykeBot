@@ -9,7 +9,7 @@ PykeBot is a Discord bot that collects League of Legends summoner names for the 
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
-This version of PykeBot only supports Toornament and rank lookups but does not require selenium
+This version of PykeBot only supports Toornament, premiertour and rank lookups but does not require selenium
 and was designed to be hosted on https://www.heroku.com/.
 
 ## Installation
@@ -48,9 +48,10 @@ Available commands are:
 The following links can be stalked:
 
 Toornament Tournaments
+
+Premiertour Leagues
    
 The link must be to the main page of the toornament.
-Only when the url ends with '/information' is it correct.
 
 ## Credit
 The PykeBot Icon was designed by the talented Binidi:
