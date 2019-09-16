@@ -4,16 +4,19 @@ Contains integration tests for the main features
 :author: Jonathan Decker
 """
 
+import os
+
+os.chdir("..")
+from utils import scrap_config as config
+
+region = "EUW"
+timezone = "CET"
+
+config.set_region(region)
+config.set_timezone(timezone)
+
 
 def test_config():
-    import os
-    os.chdir("..")
-    from utils import scrap_config as config
-    region = "EUW"
-    timezone = "CET"
-
-    config.set_region(region)
-    config.set_timezone(timezone)
 
     assert config.get_region() == region
     assert config.get_timezone() == timezone
@@ -25,6 +28,24 @@ def test_toornaments_stalker():
     from models import TeamList
 
     team_list = stalk("https://www.toornament.com/tournaments/2324026559405285376/information")
+
+    assert type(str(team_list)) == str
+    assert len(team_list.teams) > 0
+    assert isinstance(team_list, TeamList)
+
+    player_lookup.add_team_list_ranks(team_list)
+
+    for team in team_list.teams:
+        for player in team.player_list:
+            assert player.rank is not None
+
+
+def test_premiertour_stalker():
+    from stalker.premiertour_stalker import stalk
+    from utils import player_lookup
+    from models import TeamList
+
+    team_list = stalk("https://www.premiertour.gg/de/leagues/pt/1409-preseason")
 
     assert type(str(team_list)) == str
     assert len(team_list.teams) > 0
