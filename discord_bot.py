@@ -199,7 +199,7 @@ class MyBot(commands.Bot):
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, command_prefix=".lol")
-        self.bg_task = UsageReporter(self)
+        # self.bg_task = UsageReporter(self)
 
 
 logger = logging.getLogger('scrap_logger')
