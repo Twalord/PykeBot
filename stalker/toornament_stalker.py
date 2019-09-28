@@ -14,9 +14,9 @@ logger = logging.getLogger('scrap_logger')
 
 def stalk(toornament_link):
     """
-    Stalks all teams signed up for the given toornament and returns an op.gg multi link for each team
+    Stalks all teams signed up for the given toornament and returns a TeamList Object
     :param toornament_link: String, url to a tournament on toornament
-    :return: List[(String, String)], containing a tuple with the team name and the op.gg multi links for each team
+    :return: TeamList, containing the Team obj for each signed up team
     """
 
     logger.debug("Beginning toornament stalk for " + toornament_link)

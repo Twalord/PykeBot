@@ -9,7 +9,7 @@ PykeBot is a Discord bot that collects League of Legends summoner names for the 
 Given a link the bot will find all players in the tournament and build op.gg multilinks for them.
 Furthermore, the bot can go on op.gg and add soloQ rankings to each team and player.
 
-For now PykeBot supports SINN League, Toornament and Challengermode.
+For now PykeBot supports SINN League, Toornament, Premiertour and Challengermode.
 
 ## Installation
 
@@ -54,10 +54,14 @@ Summoners INN League Groups
 
 Summoners INN League Teams
 
+PremierTour Leagues
+
 ## TODO
 
 - finish challengermode tournament stalker
-- add support for esl page stalking
+- add ESL stalking
+- add Battlefy stalking
+- Output as file option
 
 ## Credit
 The PykeBot Icon was designed by the talented Binidi:

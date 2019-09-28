@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import List
 import logging
 from utils import scrap_config as config
+from utils import lookup_tables
 
 logger = logging.getLogger('scrap_logger')
 # for the models dataclasses are used, this feature has been implemented in python 3.7
@@ -110,7 +111,8 @@ class TeamList:
 
     def extended_str(self):
         out = f"__**{self.name}**__ \n"
-        for team in self.teams:
+        sorted_teams = sorted(self.teams, key=lambda team: lookup_tables.rank_lookup.get(str(team.average_rank).lower()), reverse=True)
+        for team in sorted_teams:
             out += team.extended_str() + "\n"
         return out
 

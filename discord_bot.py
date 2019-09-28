@@ -197,7 +197,7 @@ class MyBot(commands.Bot):
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, command_prefix=".lol")
-        self.bg_task = UsageReporter(self)
+        # self.bg_task = UsageReporter(self)
 
 
 logger = logging.getLogger('scrap_logger')
@@ -291,7 +291,7 @@ async def on_ready():
     logger.info(bot.user.id)
     logger.info('------')
 
-    await bot.bg_task.start()
+    # await bot.bg_task.start()
     await update_client_presence(get_status())
 
 
@@ -323,7 +323,7 @@ async def stalk(ctx, *args):
         await ctx.send("Usage is .lolstalk url")
         return
 
-    bot.bg_task.count_up("stalk_call_count:")
+    # bot.bg_task.count_up("stalk_call_count:")
 
     def sub_proc():
         return call_stalk_master(arg_list[0])
@@ -351,7 +351,7 @@ async def ext_stalk(ctx, *args):
         await ctx.send("Usage is .lolextstalk url")
         return
 
-    bot.bg_task.count_up("ext_call_count:")
+    # bot.bg_task.count_up("ext_call_count:")
 
     def sub_proc():
         return call_stalk_master(arg_list[0], extendend=True)

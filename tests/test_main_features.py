@@ -74,6 +74,24 @@ def test_challengermode_quick_stalker():
     assert isinstance(team_list, TeamList)
 
 
+def test_premiertour_stalker():
+    from stalker.premiertour_stalker import stalk
+    from utils import player_lookup
+    from models import TeamList
+
+    team_list = stalk("https://www.premiertour.gg/de/leagues/pt/1409-preseason")
+
+    assert type(str(team_list)) == str
+    assert len(team_list.teams) > 0
+    assert isinstance(team_list, TeamList)
+
+    player_lookup.add_team_list_ranks(team_list)
+
+    for team in team_list.teams:
+        for player in team.player_list:
+            assert player.rank is not None
+
+
 def test_stalkmaster():
     from stalkmaster import call_stalk_master
     urls = ["https://www.toornament.com/tournaments/2324026559405285376/information",

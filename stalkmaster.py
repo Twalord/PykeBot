@@ -4,7 +4,7 @@ Handles interpreting commands and calling the respective stalker
 :author: Jonathan Decker
 """
 import logging
-from stalker import challengermode_stalker, sinn_league_stalker, toornament_stalker
+from stalker import challengermode_stalker, sinn_league_stalker, toornament_stalker, premiertour_stalker
 from utils import task_queue, player_lookup
 from models import Team, TeamList, TeamListList
 
@@ -66,7 +66,7 @@ def call_stalk_master(url, extendend=False) -> str:
 def url_matcher(url):
     website = None
     # use lookup table to find matching website and stalker
-    website_keywords = ["challengermode", "toornament", "summoners-inn"]
+    website_keywords = ["challengermode", "toornament", "summoners-inn", "premiertour"]
     for keyword in website_keywords:
         if keyword in url:
             website = keyword
@@ -108,6 +108,13 @@ def url_matcher(url):
         else:
             raise UnknownUrlError
 
+    if website is "premiertour":
+        league_keywords = ["leagues"]
+        if all(elem in url.split("/") for elem in league_keywords):
+            website_type = "league"
+        else:
+            raise UnknownUrlError
+
     logger.debug(url + " has been detected as " + website + " and " + website_type)
 
     stalker_lookup = {"challengermode": {"match": challengermode_stalker.quick_stalk,
@@ -115,7 +122,8 @@ def url_matcher(url):
                       "toornament": {"tournament": toornament_stalker.stalk},
                       "summoners-inn": {"season": sinn_league_stalker.stalk,
                                         "group": sinn_league_stalker.stalk_group,
-                                        "team": sinn_league_stalker.stalk_team}}
+                                        "team": sinn_league_stalker.stalk_team},
+                      "premiertour": {"league": premiertour_stalker.stalk}}
 
     stalker = stalker_lookup.get(website).get(website_type)
     return stalker
