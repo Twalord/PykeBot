@@ -54,6 +54,12 @@ class Player:
         else:
             return f"{self.summoner_name} *{str(self.rank)}*"
 
+    def no_format_str(self):
+        if Rank is None:
+            return self.summoner_name
+        else:
+            return f"{self.summoner_name} {str(self.rank)}"
+
 
 @dataclass
 class Team:
@@ -94,6 +100,18 @@ class Team:
             out += str(player) + " | "
         return out[:-3]
 
+    def no_format_str(self):
+        if self.average_rank is None:
+            return f"{self.name} | {self.multi_link}"
+        else:
+            return f"{self.name} Ø: {str(self.average_rank)} max: {str(self.max_rank)} | {self.multi_link}"
+
+    def ext_no_format_str(self):
+        out = self.no_format_str() + "\n"
+        for player in self.player_list:
+            out += player.no_format_str() + " | "
+        return out[:-3]
+
 
 @dataclass
 class TeamList:
@@ -116,6 +134,19 @@ class TeamList:
             out += team.extended_str() + "\n"
         return out
 
+    def no_format_str(self):
+        out = f"{self.name}\n\n"
+        for team in self.teams:
+            out += team.no_format_str() + "\n\n"
+        return out
+
+    def ext_no_format_str(self):
+        out = f"{self.name} \n\n"
+        sorted_teams = sorted(self.teams, key=lambda team: lookup_tables.rank_lookup.get(str(team.average_rank).lower()), reverse=True)
+        for team in sorted_teams:
+            out += team.ext_no_format_str() + "\n\n"
+        return out
+
 
 @dataclass
 class TeamListList:
@@ -134,4 +165,16 @@ class TeamListList:
         out = ""
         for team_list in self.team_lists:
             out += team_list.extended_str()
+        return out
+
+    def no_format_str(self):
+        out = ""
+        for team_list in self.team_lists:
+            out += team_list.no_format_str()
+        return out
+
+    def ext_no_format_str(self):
+        out = ""
+        for team_list in self.team_lists:
+            out += team_list.ext_no_format_str()
         return out

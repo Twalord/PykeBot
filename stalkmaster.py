@@ -27,7 +27,14 @@ def feature_not_available_right_now(*args):
     return "This feature is not available in the current version"
 
 
-def call_stalk_master(url, extendend=False) -> str:
+def call_stalk_master(url, extended=False, discord_format=True) -> str:
+    """
+    Oversees stalking of the given url and returns the results as string.
+    :param url: String, a valid url for any stalker. If it can't be matched an error message will be returned.
+    :param extended: Boolean(False), flag to set if player look ups should be run for the players found.
+    :param discord_format: Boolean(True), flag to set if the returned string should be formatted for discord chat.
+    :return:
+    """
     # call url matcher to find out which stalker to use
     try:
         stalker = url_matcher(url)
@@ -43,7 +50,7 @@ def call_stalk_master(url, extendend=False) -> str:
     results = task_queue.submit_task_group(task_group)[0]
 
     # prepare output
-    if extendend:
+    if extended:
         if isinstance(results, TeamListList):
             player_lookup.add_list_team_list_ranks(results)
         elif isinstance(results, TeamList):
@@ -54,16 +61,26 @@ def call_stalk_master(url, extendend=False) -> str:
         if isinstance(results, str):
             out = results
         else:
-            out = results.extended_str()
+            if discord_format:
+                out = results.extended_str()
+            else:
+                out = results.ext_no_format_str()
 
     else:
-        out = str(results)
+        if discord_format:
+            out = str(results)
+        else:
+            out = results.no_format_str()
 
-    # return
     return out
 
 
 def url_matcher(url):
+    """
+    Analyses the given url and returns a stalker function for it.
+    :param url: String, a valid url. Will raise error if no stalker could be found.
+    :return: function, a stalker function which is able to anaylse the given url.
+    """
     website = None
     # use lookup table to find matching website and stalker
     website_keywords = ["challengermode", "toornament", "summoners-inn", "premiertour"]

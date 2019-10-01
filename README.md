@@ -34,27 +34,35 @@ Available commands are:
 
 .lolextstalk url
 
+.lolstalkf url
+
+.lolextstalkf url
+
 .lolsetregion region
 
-"stalk" will return team names and multilinks for teams in the given tournament or match.
-"extstalk" additionally collects the player soloQ rankings. This might take a moment longer to run.
-"setregion" will update the region used in the multilinks and player lookups.
+- "stalk" will return team names and multilinks for teams in the given tournament or match.
+- "extstalk" additionally collects the player soloQ rankings. This will take longer to run.
+- "stalkf" does the same as stalk but returns a text file instead.
+- "extstalkf" does the same as extstalk but returns a text file instead.
+- "setregion" will update the region used in the multilinks and player lookups.
 
 ## Features
 
 The following links can be stalked:
 
-Toornament Tournaments
+- Toornament Tournaments
 
-Challengermode Matches
+- Challengermode Matches
 
-Summoners INN League Seasons
+- Summoners INN League Seasons
 
-Summoners INN League Groups
+- Summoners INN League Groups
 
-Summoners INN League Teams
+- Summoners INN League Teams
 
-PremierTour Leagues
+- PremierTour Leagues
+
+Stalking PremierTour Leagues will take a significant amount of time.
 
 ## TODO
 
