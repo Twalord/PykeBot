@@ -73,7 +73,7 @@ def test_challengermode_quick_stalker():
     assert len(team_list.teams) > 0
     assert isinstance(team_list, TeamList)
 
-
+"""
 def test_premiertour_stalker():
     from stalker.premiertour_stalker import stalk
     from utils import player_lookup
@@ -90,6 +90,7 @@ def test_premiertour_stalker():
     for team in team_list.teams:
         for player in team.player_list:
             assert player.rank is not None
+"""
 
 
 def test_stalkmaster():
@@ -98,8 +99,7 @@ def test_stalkmaster():
             "https://www.challengermode.com/Challenges/View/672fa046-3b77-e911-abc4-0003ffde309b",
             "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/group/209-gruppenphase/5055-division-1-1",
             "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/group/209-gruppenphase/3452-gruppe-3-2",
-            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/teams/94634-unicorns-of-love",
-            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3"]
+            "https://www.summoners-inn.de/de/leagues/sinn/1338-season-3/teams/94634-unicorns-of-love"]
     for url in urls:
         out = call_stalk_master(url)
         assert type(out) == str
