@@ -64,6 +64,7 @@ def test_sinn_league_stalker():
         assert isinstance(team_list, TeamList)
 
 
+"""
 def test_challengermode_quick_stalker():
 
     from stalker.challengermode_stalker import quick_stalk
@@ -72,6 +73,7 @@ def test_challengermode_quick_stalker():
     assert type(str(team_list)) == str
     assert len(team_list.teams) > 0
     assert isinstance(team_list, TeamList)
+"""
 
 """
 def test_premiertour_stalker():

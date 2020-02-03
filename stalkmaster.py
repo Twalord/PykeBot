@@ -97,7 +97,7 @@ def url_matcher(url):
     # checks are duplicated could be solved as for loop but due to small size should be fine this way
     if website is "challengermode":
         tournament_keywords = ["Tournaments", "Show"]
-        match_keywords = ["Challenges", "View"]
+        match_keywords = ["games"]
         if all(elem in url.split("/") for elem in tournament_keywords):
             website_type = "tournament"
         elif all(elem in url.split("/") for elem in match_keywords):
