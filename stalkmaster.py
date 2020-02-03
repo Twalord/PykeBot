@@ -83,7 +83,7 @@ def url_matcher(url):
     """
     website = None
     # use lookup table to find matching website and stalker
-    website_keywords = ["challengermode", "toornament", "summoners-inn", "premiertour"]
+    website_keywords = ["challengermode", "toornament", "summoners-inn", "primeleague"]
     for keyword in website_keywords:
         if keyword in url:
             website = keyword
@@ -125,7 +125,7 @@ def url_matcher(url):
         else:
             raise UnknownUrlError
 
-    if website is "premiertour":
+    if website is "primeleague":
         league_keywords = ["leagues"]
         if all(elem in url.split("/") for elem in league_keywords):
             website_type = "league"
@@ -140,7 +140,7 @@ def url_matcher(url):
                       "summoners-inn": {"season": sinn_league_stalker.stalk,
                                         "group": sinn_league_stalker.stalk_group,
                                         "team": sinn_league_stalker.stalk_team},
-                      "premiertour": {"league": premiertour_stalker.stalk}}
+                      "primeleague": {"league": premiertour_stalker.stalk}}
 
     stalker = stalker_lookup.get(website).get(website_type)
     return stalker

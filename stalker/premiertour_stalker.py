@@ -1,5 +1,6 @@
 """
-Handles scraping premiertour.gg
+Handles scraping of primeleague.gg since premiertour rebranded to primeleague.
+
 :author: Jonathan Decker
 """
 
